@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>계정 생성</title>
+</head>
+<body>
+    {% include 'home/navbar.html' %}
+    
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h4>Create Account</h4>
+            </div>
+            <div class="card-body">
+              <form>
+                <div class="mb-3">
+                  <label for="id" class="form-label">ID</label>
+                  <input type="text" class="form-control" id="id" placeholder="Enter your ID">
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                </div>
+                <div class="mb-3">
+                  <label for="username" class="form-label">Username</label>
+                  <input type="text" class="form-control" id="username" placeholder="Enter your username">
+                </div>
+                <div class="mb-3">
+                  <label for="phone_num" class="form-label">Phone Number</label>
+                  <input type="text" class="form-control" id="phone_num" placeholder="Enter your phone number">
+                </div>
+                <button type="submit" class="btn btn-primary">Create Account</button>
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+</body>
+</html>
