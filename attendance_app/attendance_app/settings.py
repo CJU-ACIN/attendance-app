@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'survey.apps.SurveyConfig',
     'user.apps.UserConfig',
     'home.apps.HomeConfig',
+
+    'django_bootstrap5',
 ]
 
 MIDDLEWARE = [
