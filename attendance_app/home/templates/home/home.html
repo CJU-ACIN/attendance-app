@@ -8,32 +8,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
-        .centered-div {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 100vh;
-        }
-        .center-content {
-          text-align: center;
-        }
+      .centered-div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      .center-content {
+        text-align: center;
+      }
     </style>
 
     <title>Home</title>
 
 </head>
 <body>
-    {% include 'home/navbar.html' %}
+  {% include 'home/navbar.html' %}
 
-    <div class="container p-3">
-        <div class="centered-div">
-            <div class="center-content">
-              <h1><b>XXX 님의 QR코드</b></h1>
-              <img class="p-3" src="{% static 'admin/img/qr_example.png' %}" alt="qr_example.png">
-            </div>
-        </div>
-        
-    </div>
-    
+  <h1>메인 페이지</h1>
+
 </body>
 </html>

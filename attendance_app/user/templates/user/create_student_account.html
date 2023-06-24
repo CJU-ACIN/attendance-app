@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script>
+    // 유효성 검사
+    function validate_value() {
+      var birthdateInput = document.getElementById('birthdate');
+      var birthdateValue = birthdateInput.value;
+      
+      var idInput = document.getElementById('id');
+      var idValue = idInput.value;
+
+
+
+      // 아이디 유효성 검사 확인
+            if (!/^[a-zA-Z0-9]+$/.test(idValue)) {
+        alert('ID는 영문자와 숫자로만 이루어져야 합니다.');
+        return false; // Prevent form submission
+      }
+
+      
+      // 생년월일 유효성 검사 확인
+      if (!/^\d{6}$/.test(birthdateValue)) {
+        alert('생년월일 6자로 입력해주세요 ex) 990812 ');
+        return false; // Prevent form submission
+      }
+  
+      return true; // Allow form submission
+    }
+  </script>
+
+  <title>계정 생성</title>
+</head>
+<body>
+    {% include 'home/navbar.html' %}
+    
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h1>학생 계정 생성</h>
+            </div>
+
+            <div class="card-body">
+              <form method="post" onsubmit="return validate_value()" action="{% url 'create_student_account' %}">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="name">이름</label>
+                  <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password">비밀번호</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="gender">성별</label>
+                    <select class="form-select" id="gender" name="gender" required>
+                        <option value="" selected disabled>성별을 선택하세요</option>
+                        <option value="male">남자</option>
+                        <option value="female">여자</option>
+                        <option value="other">기타</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="birthdate">생년월일 6글자 - 예시) 990812 </label>
+                    <input type="text" class="form-control" id="birthdate" name="birthdate" placeholder="ex) 990812" maxlength="6" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="division">분반</label>
+                    <select class="form-select" id="division" name="division" required>
+                      <option value="" selected disabled>분반을 고르세요</option>
+
+                      <option value="division1">
+                        프로그래밍반
+                      </option>
+
+                      <option value="division2">
+                        호텔경영반
+                      </option>
+
+                      <option value="division3">
+                        입시미술반
+                      </option>
+
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Account</button>
+            </form>
+            </div>
+          </div>
+        </div>
+    </div>
+</body>
+</html>

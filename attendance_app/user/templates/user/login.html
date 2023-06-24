@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>로그인</title>
+</head>
+<body>
+    {% include 'home/navbar.html' %}
+    
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h4>Login</h4>
+                </div>
+                <div class="card-body">
+                  <form>
+                    <div class="mb-3">
+                      <label for="username" class="form-label">Username</label>
+                      <input type="text" class="form-control" id="username" placeholder="Enter your username">
+                    </div>
+                    <div class="mb-3">
+                      <label for="password" class="form-label">Password</label>
+                      <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                  </form>
+                </div>
+                <div class="card-footer">
+                  <p class="text-center">계정이 없으신가요? 만드세요! <a href="{% url 'create_student_account' %}">계정 생성</a></p>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+</body>
+</html>
