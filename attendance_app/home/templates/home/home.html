@@ -8,14 +8,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
-      .centered-div {
+      .btn {
+        height: 300px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .btn-text {
+        font-size: 61px; 
+
+      }
+
+      .text-container {
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100vh;
-      }
-      .center-content {
-        text-align: center;
+        height: 100%;
       }
     </style>
 
@@ -25,7 +35,22 @@
 <body>
   {% include 'home/navbar.html' %}
 
-  <h1>메인 페이지</h1>
+  <div class="container">
+    <div class="btn-div d-grid gap-2">
+      <a role="button" class="btn btn-success" type="button" href="{% url 'show_in_qr' %}">
+        <div class="text-container">
+          <span class="btn-text"><b>입실</b></span>
+        </div>
+        
+      </a>
+
+      <a role="button" class="btn btn-info" type="button" href="{% url 'show_out_qr' %}">
+        <div class="text-container">
+          <span class="btn-text"><b>퇴실</b></span>
+        </div>
+      </a>
+    </div>
+  </div>
 
 </body>
 </html>

@@ -1,0 +1,45 @@
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>강사 목록</title>
+</head>
+<body>
+    {% include 'home/navbar_admin.html' %}
+    <br><br><br>
+    <div class="container">
+      <h1><b>강사 목록</b></h1>
+      <br><br><br>
+      <a href="{% url 'admin_create' %}" class="btn btn-primary">강사 추가</a>
+      <br><br><br>
+      <ul class="list-group">
+        {% for t in teacher%}
+            <div class="row">
+                <div class="col-9">
+                    <li class="list-group-item">{{t.name}}</li>
+                </div>
+
+                <div class="col-3">
+                    <form method="post" action="{% url 'admin_delete' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="teacher_pk" value="{{t.pk}}">  <!-- 보내고자 하는 값 -->
+                        <button type="submit" class="btn btn-danger">X</button>
+                    </form>
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+      </ul>
+  </div>
+</body>
+</html>

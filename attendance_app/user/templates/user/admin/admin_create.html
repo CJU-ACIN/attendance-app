@@ -1,0 +1,53 @@
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <title>강사 추가</title>
+</head>
+<body>
+  {% include 'home/navbar_admin.html' %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h1>강사 추가</h1>
+            </div>
+
+            <div class="card-body">
+              <form method="post" onsubmit="return validate_value()" action="{% url 'admin_create' %}">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="name">이름</label>
+                  <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password">비밀번호</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+
+                </div>
+
+                <button type="submit" class="btn btn-primary">Create Account</button>
+            </form>
+            </div>
+          </div>
+        </div>
+    </div>
+</body>
+</html>

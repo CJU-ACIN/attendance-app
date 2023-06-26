@@ -9,5 +9,3 @@ class Client(models.Model):
     gender = models.CharField(max_length=10)
     division = models.CharField(max_length=30)
     qr_code = models.ImageField(upload_to='qr_student/')
-
-

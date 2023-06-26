@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        .centered-div {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+        }
+        .center-content {
+          text-align: center;
+        }
+    </style>
+
+    <title>입실 QR</title>
+
+</head>
+<body>
+    {% include 'home/navbar.html' %}
+
+    <div class="container p-3">
+        <div class="centered-div">
+            <div class="center-content">
+              <h1><b>XXX 님의 입실 QR</b></h1>
+              <img class="p-3" src="{% static 'admin/img/qr_example.png' %}" alt="qr_example.png">
+            </div>
+        </div>
+        
+    </div>
+    
+</body>
+</html>

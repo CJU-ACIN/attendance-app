@@ -1,0 +1,23 @@
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>관리자 페이지</title>
+</head>
+<body>
+  {% include 'home/navbar_admin.html' %}
+  <br><br><br>
+    <div class="container">
+      <h1><b>관리자 페이지</b></h1>
+      <br><br><br>
+      <div class="list-group">
+        <a href="{% url 'admin_list' %}" class="list-group-item list-group-item-action">강사 목록</a>
+        <a href="#" class="list-group-item list-group-item-action">강의 목록</a>
+      </div>
+  </div>
+</body>
+</html>
