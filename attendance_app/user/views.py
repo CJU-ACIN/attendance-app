@@ -1,6 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from user.models import Client
+from user.models import Student
+
+from django.contrib.auth import login, authenticate
+
+from user.forms import SignUpForm, ClientForm
+from django.contrib import messages
+
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+
 
 
 # Create your views here.
@@ -9,43 +18,39 @@ def admin_home(request):
     return render(request, 'user/admin/admin_home.html')
 
 
-# 로그인
-def login(request):
-    return render(request, 'user/login.html')
-
-
 # 학생 계정 추가
-def create_student_account(request):
+def signup(request):
     if request.method == 'POST':
-        id = request.POST['id']
-        name = request.POST['name']
-        password = request.POST['password']
-        gender = request.POST['gender']
-        birthdate = request.POST['birthdate']
-        division = request.POST['division']
+        signup_form = SignUpForm(request.POST)
+        client_form = ClientForm(request.POST)
+        
+        if signup_form.is_valid() and client_form.is_valid():
+            # 회원가입 후 자동 로그인
+            username = signup_form.cleaned_data.get('username')
+            password = signup_form.cleaned_data.get('password')
+            
+            # 비밀번호 유효성 검사
+            try:
+                validate_password(password)
+            except ValidationError as validation_error:
+                messages.error(request, f"{validation_error}")
+                return render(request, 'user/student/signup.html', {'signup_form': signup_form, 'client_form': client_form})
+            
+            user = signup_form.save()
+            student = client_form.save(commit=False)
+            student.user = user
+            student.save()
+            user = authenticate(username=username, password=password)
 
-        user = User(
-            username=id,
-            password=password,
-            is_staff=0,
-        )
-        user.save()
+            if user is not None:
+                login(request, user)
+                return render(request, 'home/home.html')
 
-        client = Client(
-            user=user,
-            name=name,
-            gender=gender,
-            birth_date=birthdate,
-            division=division,
-        )
-
-        client.save()
-
-        print('account created!')
-
-        return redirect('user/student/login')
     else:
-        return render(request, 'user/student/create_student_account.html')
+        signup_form = SignUpForm()
+        client_form = ClientForm()
+
+    return render(request, 'user/student/signup.html', {'signup_form': signup_form, 'client_form': client_form})
 
 
 ## QR 코드 보여주기
@@ -59,62 +64,4 @@ def show_out_qr(request):
     return render(request, 'user/student/show_out_qr.html')
 
 
-# 관리자 목록
-def admin_list(request):
-    staff_user = User.objects.filter(is_staff=1)
-
-    # staff_user에 해당하는 Client 객체들 가져오기
-    teacher = Client.objects.filter(user__in=staff_user)
     
-    context = {
-        'teacher': teacher,
-        
-        }
-    
-    return render(request, 'user/admin/admin_list.html', context)
-
-# 관리자 생성
-def admin_create(request):
-    if request.method == 'POST':
-
-        id = request.POST['id']
-        name = request.POST['name']
-        password = request.POST['password']
-
-        user = User(
-            username=id,
-            password=password,
-            is_staff=1,
-        )
-        user.save()
-
-        client = Client(
-            user=user,
-            name=name,
-        )
-
-        client.save()
-
-        print('account created!')
-        
-        return redirect('admin_list')
-    
-    else:
-        return render(request, 'user/admin/admin_create.html')
-    
-
-# 관리자 삭제
-def admin_delete(request):
-    if request.method == 'POST':
-
-        pk = request.POST['teacher_pk']
-
-        client = Client.objects.get(pk=pk)
-
-        client.delete()
-
-        print('account deleted!')
-        
-        return redirect('admin_list')
-    
-    return redirect('admin_list')
