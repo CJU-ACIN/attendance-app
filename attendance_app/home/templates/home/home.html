@@ -35,7 +35,6 @@
 <body>
   {% include 'home/navbar.html' %}
 
-  {{user.client.name}}
   <div class="container">
     <div class="btn-div d-grid gap-2">
       <a role="button" class="btn btn-success" type="button" href="{% url 'user:show_in_qr' %}">
