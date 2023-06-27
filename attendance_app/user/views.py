@@ -9,7 +9,7 @@ from django.contrib import messages
 
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-
+from django.contrib.auth.hashers import make_password
 
 
 # Create your views here.
@@ -18,7 +18,7 @@ def admin_home(request):
     return render(request, 'user/admin/admin_home.html')
 
 
-# 학생 계정 추가
+# 학생 계정 추가 
 def signup(request):
     if request.method == 'POST':
         signup_form = SignUpForm(request.POST)
@@ -28,23 +28,39 @@ def signup(request):
             # 회원가입 후 자동 로그인
             username = signup_form.cleaned_data.get('username')
             password = signup_form.cleaned_data.get('password')
-            
-            # 비밀번호 유효성 검사
-            try:
-                validate_password(password)
-            except ValidationError as validation_error:
-                messages.error(request, f"{validation_error}")
+            password2 = signup_form.cleaned_data.get('password2')
+
+            # 비밀번호가 유효하지않음.
+            if password != password2:
+                messages.error(request, "비밀번호가 일치하지 않습니다.")
                 return render(request, 'user/student/signup.html', {'signup_form': signup_form, 'client_form': client_form})
             
-            user = signup_form.save()
-            student = client_form.save(commit=False)
-            student.user = user
-            student.save()
-            user = authenticate(username=username, password=password)
-
-            if user is not None:
-                login(request, user)
-                return render(request, 'home/home.html')
+            else:
+                try:
+                    # 비밀번호 검증
+                    validate_password(password)
+                    validate_password(password2)
+                    
+                    # 비밀번호 암호화
+                    hashed_password = make_password(password)
+                    
+                    user = signup_form.save(commit=False)
+                    user.password = hashed_password  # 암호화된 비밀번호 설정
+                    user.save()
+                    
+                    student = client_form.save(commit=False)
+                    student.user = user
+                    student.save()
+                    
+                    # 자동 로그인
+                    user = authenticate(username=username, password=password)
+                    if user is not None:
+                        login(request, user)
+                        return render(request, 'home/home.html')
+                    
+                except ValidationError as validation_error:
+                    messages.error(request, f"{validation_error}")
+                    return render(request, 'user/student/signup.html', {'signup_form': signup_form, 'client_form': client_form})
 
     else:
         signup_form = SignUpForm()
