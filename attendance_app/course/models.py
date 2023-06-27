@@ -1,6 +1,5 @@
 from django.db import models
-from user.models import Student
-
+from user.models import Student, Division
 
 # Create your models here.
 
@@ -8,7 +7,7 @@ from user.models import Student
 
 class Course(models.Model):
     teacher_id = models.CharField(max_length=20)
-    division_name = models.CharField(max_length=50)
+    division_name = models.ForeignKey(Division, on_delete=models.CASCADE)
     course_name = models.CharField(max_length=50)
     start_date = models.DateField()
     start_at = models.TimeField()

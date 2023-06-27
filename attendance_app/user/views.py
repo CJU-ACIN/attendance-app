@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from user.models import Student
+from user.models import Student, Division
 
 from django.contrib.auth import login, authenticate
 
@@ -11,6 +11,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password
 
+from user.forms import DivisionForm
 
 # Create your views here.
 # 관리자 페이지
@@ -80,4 +81,53 @@ def show_out_qr(request):
     return render(request, 'user/student/show_out_qr.html')
 
 
+## 분반
+# 분반 목록
+def division_list(request):
+    divison = Division.objects.all()
     
+    context = {'division': divison}
+    return render(request, 'user/admin/admin_division_list.html', context)
+
+
+# 분반 추가
+def create_division(request):
+    if request.method == 'POST':
+        form = DivisionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('user:division_list')  # 적절한 URL로 리다이렉트
+
+    else:
+        form = DivisionForm()
+
+    return render(request, 'user/admin/admin_create_division.html', {'form': form})
+
+
+
+# 분반 수정
+def edit_division(request, division_id):
+    division = get_object_or_404(Division, pk=division_id)
+
+    if request.method == 'POST':
+        form = DivisionForm(request.POST, instance=division)
+        if form.is_valid():
+            form.save()
+            return redirect('user:division_list')  # 적절한 URL로 리다이렉트
+
+    else:
+        form = DivisionForm(instance=division)
+
+    return render(request, 'user/admin/admin_edit_division.html', {'form': form, 'division': division})
+
+
+
+# 분반 삭제
+def delete_division(request, division_id):
+    division = get_object_or_404(Division, pk=division_id)
+    
+    if request.method == 'POST':
+        division.delete()
+        return redirect('user:division_list')  # 적절한 URL로 리다이렉트
+    
+    return render(request, 'user/admin/admin_delete_division.html', {'division': division})

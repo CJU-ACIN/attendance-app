@@ -36,6 +36,7 @@ class SignUpForm(forms.ModelForm):
 
         return cleaned_data
 
+
 class ClientForm(forms.ModelForm):
     GENDER_CHOICES = (
         ('M', '남자'),
@@ -55,6 +56,19 @@ class ClientForm(forms.ModelForm):
             'birth_date': '생년월일',
             'gender': '성별',
             'division': '학과',
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
+# 분반 폼
+class DivisionForm(forms.ModelForm):
+    class Meta:
+        model = Division
+        fields = ['name']
+        labels = {
+            'name': '분반 이름',
         }
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
