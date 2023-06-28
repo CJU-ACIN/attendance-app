@@ -1,0 +1,33 @@
+{% load static %}
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>과목 목록</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>과목 목록</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>과목명</th>
+        <th>교수명</th>
+        <th>학점</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for subject in subjects %}
+        <tr>
+          <td>{{ subject.name }}</td>
+          <td>{{ subject.professor }}</td>
+          <td>{{ subject.credit }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

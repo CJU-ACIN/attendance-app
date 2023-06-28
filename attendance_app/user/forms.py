@@ -4,17 +4,18 @@ from django.contrib.auth.models import User
 from user.models import Student
 from user.models import Division
 
-
 # Forms
 class SignUpForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}), label='비밀번호', help_text='')
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}), label='비밀번호 확인', help_text='')
 
     class Meta:
         model = User
-        fields = ['username', 'password']
+        fields = ['username', 'password', 'password2']
         labels = {
-            'username': '사용자명',
+            'username': 'ID',
             'password': '비밀번호',
+            'password2': '비밀번호 확인',
         }
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'}),
@@ -23,6 +24,17 @@ class SignUpForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].help_text = ''  # 도움말 텍스트 비움
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        password2 = cleaned_data.get('password2')
+
+        if password and password2 and password != password2:
+            self.add_error('password2', '비밀번호와 비밀번호 확인이 일치하지 않습니다.')
+
+        return cleaned_data
+
 
 class ClientForm(forms.ModelForm):
     GENDER_CHOICES = (

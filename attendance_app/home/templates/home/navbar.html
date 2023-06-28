@@ -27,7 +27,7 @@
                       </li>
 
                       <span class="navbar-text mr-3">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 환영합니다, <b> {{ user }} </b>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 환영합니다, <b> {{ user.student }} </b>
                       </span> 
                   {% else %}
                     <!-- staff가 아닌 일반 사용자한테 보여줄 내용 -->
@@ -41,8 +41,12 @@
                         <a class="nav-link" href="#">내 출석</a>
                     </li>
 
+                    <li class="nav-item">
+                      <a class="nav-link" aria-current="page" href="{% url 'home:logout' %}">로그아웃</a>
+                    </li>
+
                     <span class="navbar-text mr-50">
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 환영합니다, <b> {{ user }} </b>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 환영합니다, <b> {{ user.student }} </b>
                     </span> 
                 
                   {% endif %}
@@ -56,4 +60,3 @@
       </div>
   </div>
 </nav>
-
