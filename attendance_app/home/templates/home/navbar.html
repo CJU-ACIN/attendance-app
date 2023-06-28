@@ -25,10 +25,16 @@
                       <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="{% url 'home:logout' %}">로그아웃</a>
                       </li>
-
+                      
+                      {% if user.student %}
                       <span class="navbar-text mr-3">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 환영합니다, <b> {{ user.student }} </b>
-                      </span> 
+                      </span>
+                      {% else %}
+                      <span class="navbar-text mr-3">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 환영합니다, <b> {{ user }} [관리자 계정] </b>
+                      </span>
+                      {% endif %}
                   {% else %}
                     <!-- staff가 아닌 일반 사용자한테 보여줄 내용 -->
                     <li class="nav-item">
@@ -45,9 +51,15 @@
                       <a class="nav-link" aria-current="page" href="{% url 'home:logout' %}">로그아웃</a>
                     </li>
 
-                    <span class="navbar-text mr-50">
+                    {% if user.student %}
+                    <span class="navbar-text mr-3">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 환영합니다, <b> {{ user.student }} </b>
-                    </span> 
+                    </span>
+                    {% else %}
+                    <span class="navbar-text mr-3">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 환영합니다, <b> {{ user }} </b>
+                    </span>
+                    {% endif %}
                 
                   {% endif %}
               {% else %}

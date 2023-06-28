@@ -59,3 +59,16 @@ class ClientForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+
+# 분반 폼
+class DivisionForm(forms.ModelForm):
+    class Meta:
+        model = Division
+        fields = ['name']
+        labels = {
+            'name': '분반 이름',
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+        }

@@ -11,6 +11,11 @@ urlpatterns = [
 
     path('signup/', views.signup, name='signup'),
     
-    path('show_in_qr', views.show_in_qr, name='show_in_qr'),
-    path('show_out_qr', views.show_out_qr, name='show_out_qr'),
+    path('show_in_qr/', views.show_in_qr, name='show_in_qr'),
+    path('show_out_qr/', views.show_out_qr, name='show_out_qr'),
+    
+    path('division_list/', views.division_list, name='division_list'),
+    path('create_division/', views.create_division, name='create_division'),
+    path('edit_division/<int:division_id>/', views.edit_division, name='edit_division'),
+    path('delete_division/<int:division_id>/', views.delete_division, name='delete_division'),
 ]

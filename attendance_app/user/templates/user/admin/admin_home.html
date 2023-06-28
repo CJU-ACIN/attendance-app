@@ -13,10 +13,30 @@
   <br><br><br>
     <div class="container">
       <h1><b>관리자 페이지</b></h1>
+
       <br><br><br>
+      
       <div class="list-group">
-        <a href="#" class="list-group-item list-group-item-action">강의 목록</a>
+        <a href="{% url 'user:division_list' %}" class="list-group-item list-group-item-action">전체 분반 목록</a>
       </div>
+
+      <div class="list-group">
+        <a href="{% url 'course:course_list' %}" class="list-group-item list-group-item-action">전체 강의 목록</a>
+      </div>
+
+      <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action">강의별 출석 현황</a>
+      </div>
+
+      <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action">개인별 출석 현황</a>
+      </div>
+
+      <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action">강의별 강의평가</a>
+      </div>
+
+
   </div>
 </body>
 </html>
