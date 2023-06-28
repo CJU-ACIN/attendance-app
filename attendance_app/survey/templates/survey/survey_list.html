@@ -24,7 +24,6 @@
 
       <div class="list-group">
         {% for c in course %}
-        {{c.pk}}
           <a href="{% url 'survey:survey_detail' c.pk %}" class="list-group-item list-group-item-action">
             [{{ c.division_name }}] <b>{{ c.course_name }}</b> (강사: {{ c.teacher_name }})
           </a>
