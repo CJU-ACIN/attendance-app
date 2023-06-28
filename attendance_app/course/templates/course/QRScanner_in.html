@@ -52,12 +52,37 @@
     #noQRFound {
       text-align: center;
     }
+
+    #notification-container {
+      background: rgba(255, 0, 0, 0.7);
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    #notification-container.show {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
   <h1>전자출결 (출입용)</h1>
-  <div>과목 명 : {{subject_name}} &nbsp;&nbsp;&nbsp; 강사 : {{teacher}} </div>
-  <div>수업 시간 : {{class_time}}</div>
+  <p>과목 명 : {{course.course_name}} &nbsp;&nbsp;&nbsp; 강사 : {{course.teacher_name}} </p>
+  <p>수업 일시 : {{course.start_date}}</p>
+  <p>수업 시작 : {{course.start_at}} </p>
+  <p>수업 시간 : {{course.hours}} 시간</p>
+
+  <!-- 유효하지 않은 QR코드를 제시했을시에 뜨는 알림창-->
+  <div class="notification-container" id="notification-container">
+    <p>유효한 QR코드가 아닙니다. 등록된 QR코드가 맞는지 확인해 주세요.</p>
+  </div>
+
   <p>학생 QR코드를 카메라에 보여주세요.</p>
   <div id="loadingMessage">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
   <canvas id="canvas" hidden></canvas>
@@ -116,7 +141,7 @@
           outputData.innerText = code.data;
           
           if(outputMessage.hidden){
-            var scannerUrl = "{% url 'course:QRScanner_in' %}"; // url
+            var scannerUrl = "{% url 'course:QRScanner_in' course.pk %}"; // url
             var csrfToken = "{{ csrf_token }}";  // CSRF 토큰을 JavaScript 변수로 가져옴
             // 폼 동적 생성
             var form = document.createElement("form");
@@ -147,6 +172,22 @@
         }
       }
       requestAnimationFrame(tick);
+    }
+
+    // Show notification (qr 에러 처리부분)
+    const notification = document.getElementById('notification-container')
+
+    const showNotification = () => {
+      notification.classList.add('show')
+      setTimeout(() => {
+        notification.classList.remove('show')
+      }, 5000)
+    }
+    
+    var qr_error = {% if qr_error %}true{% else %}false{% endif %};
+    // Check QR code validity
+    if (qr_error) {
+      showNotification();
     }
   </script> 
 </body>

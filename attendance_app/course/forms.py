@@ -1,5 +1,5 @@
 from django import forms
-from course.models import Course
+from course.models import Course, ClassAttend
 from django.utils.safestring import mark_safe
 from django.forms import DateInput, TimeInput
 
@@ -15,12 +15,15 @@ class CourseForm(forms.ModelForm):
             'division_name': '분반 이름',
             'start_date': '시작 날짜',
             'start_at': '시작 시간',
+            'end_at': '종료 시간',
             'hours': '진행 시간(시간) - 숫자만 기입 ex) 3',
         }
         
         widgets = {
             'start_date': DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'start_at': TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
+            'end_at': TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
+
         }
 
     def __init__(self, *args, **kwargs):
@@ -30,4 +33,10 @@ class CourseForm(forms.ModelForm):
         self.fields['teacher_name'].widget.attrs.update({'class': 'form-control'})
         self.fields['start_date'].widget.attrs.update({'class': 'form-control'})
         self.fields['start_at'].widget.attrs.update({'class': 'form-control'})
+        self.fields['end_at'].widget.attrs.update({'class': 'form-control'})
         self.fields['hours'].widget.attrs.update({'class': 'form-control'})
+
+class ClassAttendForm(forms.ModelForm):
+    class Meta:
+        model = ClassAttend
+        fields = ['course_id', 'student_id', 'start_at']
