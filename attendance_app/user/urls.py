@@ -17,5 +17,5 @@ urlpatterns = [
     path('division_list/', views.division_list, name='division_list'),
     path('create_division/', views.create_division, name='create_division'),
     path('edit_division/<int:division_id>/', views.edit_division, name='edit_division'),
-    path('delete_division/<int:division_id>/', views.delete_division, name='delete_division')
+    path('delete_division/<int:division_id>/', views.delete_division, name='delete_division'),
 ]

@@ -12,9 +12,25 @@
   {% include 'home/navbar.html' %}
   <br><br><br>
     <div class="container">
-      <h1><b>r강의 추가</b></h1>
+      <a class="btn btn-secondary" href="{% url 'course:course_list' %}" role="button">뒤로 가기</a>
+      <br><br>
+      <h1><b>강의 추가</b></h1>
 
       <br><br><br>
+
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="row">
+          <div class="col-3">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+          </div>
+        </div>
+        <br>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">강의 생성</button>
+      </form>
 
 
   </div>
