@@ -23,4 +23,5 @@ class ClassAttend(models.Model):
     student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
     start_at = models.TimeField()
     end_at = models.TimeField()
+    submit_survey = models.BooleanField(default=False)
 
