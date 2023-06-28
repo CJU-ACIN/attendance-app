@@ -1,0 +1,137 @@
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ course.course_name }} 상세 페이지</title>
+</head>
+<body>
+  {% include 'home/navbar.html' %}
+  <br><br><br>
+    <div class="container">
+
+      <a class="btn btn-warning" href="{% url 'survey:survey_detail' course.pk %}" role="button">뒤로가기</a>
+
+      <br><br><br>
+      설문 상세 페이지
+      <h1><b>[{{ course.course_name }}] 설문지 답변 - {{ survey_reply.pk }}</b></h1>
+    
+      <br><br>
+      
+      <hr>
+
+      <br>
+      
+        <!-- 질문 1번 -->
+        {% if survey.question1 %}
+            <h3><b>[1번 문항] {{ survey.question1 }}</b></h3>
+            <br>
+
+            <!-- 질문 1번 답변 -->
+            {% if survey_reply.reply1 %}
+              답변: {{ survey_reply.reply1 }}
+
+            {% else %}
+              답변: 없음
+
+            {% endif %}
+
+
+        {% else %}
+            <h3><b>[1번 문항] 없음</b></h3>
+            <br>
+
+            <!-- 질문 1번 답변 -->
+            {% if survey_reply.reply1 %}
+              답변: {{ survey_reply.reply1 }}
+
+            {% else %}
+              답변: 없음
+              
+            {% endif %}
+
+        {% endif %}
+
+        <br><br>
+        
+        <hr>
+
+        <br><br>
+
+        <!-- 질문 2번 -->
+        {% if survey.question1 %}
+          <h3><b>[2번 문항] {{ survey.question2 }}</b></h3>
+          <br>
+
+          <!-- 질문 2번 답변 -->
+          {% if survey_reply.reply2 %}
+            답변: {{ survey_reply.reply2 }}
+
+          {% else %}
+            답변: 없음
+
+          {% endif %}
+
+
+        {% else %}
+          <h3><b>[2번 문항] 없음</b></h3>
+          <br>
+
+          <!-- 질문 2번 답변 -->
+          {% if survey_reply.reply2 %}
+            답변: {{ survey_reply.reply2 }}
+
+          {% else %}
+            답변: 없음
+            
+          {% endif %}
+
+        {% endif %}
+
+        <br><br>
+        <hr>
+        <br><br>
+
+        <!-- 질문 3번 -->
+        {% if survey.question3 %}
+          <h3><b>[3번 문항] {{ survey.question3 }}</b></h3>
+          <br>
+
+          <!-- 질문 3번 답변 -->
+          {% if survey_reply.reply3 %}
+            답변: {{ survey_reply.reply3 }}
+
+          {% else %}
+            답변: 없음
+
+          {% endif %}
+
+
+        {% else %}
+          <h3><b>[3번 문항] 없음 </b></h3>
+          <br>
+
+          <!-- 질문 3번 답변 -->
+          {% if survey_reply.reply3 %}
+            답변: {{ survey_reply.reply3 }}
+
+          {% else %}
+            답변: 없음
+            
+          {% endif %}
+
+        {% endif %}
+
+        
+        <br><br>
+
+
+        
+  </div>
+
+
+</body>
+</html>

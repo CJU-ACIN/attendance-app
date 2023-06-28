@@ -1,6 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
+
 from course.models import Course
 from course.forms import CourseForm
+from survey.forms import SurveyForm
+
+from django.contrib import messages
+
 
 # Create your views here.
 def course_list(request):
@@ -13,15 +18,24 @@ def course_list(request):
 # 강좌 추가
 def create_course(request):
     if request.method == 'POST':
-        form = CourseForm(request.POST)
-        if form.is_valid():
-            form.save()
+        course_form = CourseForm(request.POST)
+        survey_form = SurveyForm(request.POST)
+        
+        if course_form.is_valid() and survey_form.is_valid():
+            course_form.save()
+            survey_form.save()
             return redirect('course:course_list')  # 적절한 URL로 리다이렉트
 
-    else:
-        form = CourseForm()
 
-    return render(request, 'course/create_course.html', {'form': form})
+    else:
+        course_form = CourseForm()
+        survey_form = SurveyForm()
+
+    context = {
+        'course_form': course_form,
+        'survey_form': survey_form,
+    }
+    return render(request, 'course/create_course.html', context)
 
 
 # 강좌 상세 페이지

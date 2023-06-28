@@ -1,0 +1,84 @@
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ course.course_name }} 강의평가 페이지</title>
+</head>
+<body>
+  {% include 'home/navbar.html' %}
+  <br><br><br>
+    <div class="container">
+
+      <a class="btn btn-warning" href="{% url 'survey:survey_list' %}" role="button">평가 목록으로</a>
+
+      <br><br><br>
+      상세 페이지
+      <h1><b>{{ course.course_name }}</b></h1>
+    
+      <br><br>
+      <a class="btn btn-info" href="#" role="button">질문 내용 수정</a>
+    
+      <br><br>
+      
+        <!-- 대충 기본 정보 -->
+        <h4> 질문 내용 </h4>
+        <!-- 질문 1번 -->
+        {% if survey.question1 %}
+            [1번 문항] {{ survey.question1 }}
+            <br>
+
+        {% else %}
+            [1번 문항] 없음
+            <br>
+
+        {% endif %}
+
+        <!-- 질문 2번 -->
+        {% if survey.question2 %}
+            [2번 문항] {{ survey.question2 }}
+            <br>
+
+        {% else %}
+            [2번 문항] 없음
+            <br>
+
+        {% endif %}
+
+        <!-- 질문 3번 -->
+        {% if survey.question3 %}
+            [3번 문항] {{ survey.question3 }}
+            <br>
+
+        {% else %}
+            [3번 문항] 없음
+            <br>
+
+        {% endif %}
+
+        
+        <br><br>
+
+        <hr>
+
+        <br><br>
+        클릭해서 설문 답변을 보세요.
+
+        <br><br>
+
+        <div class="list-group">
+            {% for sr in survey_reply %}
+              <a href="{% url 'survey:survey_reply_detail' sr.pk %}" class="list-group-item list-group-item-action">
+                {{ sr }}
+              </a>
+            {% endfor %}
+        </div>
+
+  </div>
+
+
+</body>
+</html>

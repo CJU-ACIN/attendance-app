@@ -15,6 +15,7 @@ class CourseForm(forms.ModelForm):
             'division_name': '분반 이름',
             'start_date': '시작 날짜',
             'start_at': '시작 시간',
+            'end_at': '종료 시간',
             'hours': '진행 시간(시간) - 숫자만 기입 ex) 3',
         }
         
