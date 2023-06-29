@@ -34,7 +34,7 @@ def create_course(request):
             survey.course_id_id = course.id
             survey_form.save()
   
-            return redirect('course:course_list')  # 적절한 URL로 리다이렉트
+            return redirect('user:division_list')  # 적절한 URL로 리다이렉트
 
 
     else:

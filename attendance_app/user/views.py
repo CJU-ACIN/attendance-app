@@ -11,7 +11,11 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password
 
-from user.forms import DivisionForm
+from django.contrib.auth import update_session_auth_hash
+
+from user.forms import DivisionForm, StudentEditForm, PasswordChangeFormCustom
+
+
 
 # Create your views here.
 # 관리자 페이지
@@ -67,7 +71,64 @@ def signup(request):
         signup_form = SignUpForm()
         client_form = ClientForm()
 
-    return render(request, 'user/student/signup.html', {'signup_form': signup_form, 'client_form': client_form})
+    context = {
+        'signup_form': signup_form, 
+        'client_form': client_form,
+        
+        }
+    
+    return render(request, 'user/student/signup.html', context)
+
+
+#  학생 정보
+def student_detail(request):
+    user = User.objects.get(pk=request.user.pk)
+    student = Student.objects.get(user_id=request.user.pk)
+    
+    
+    context = {
+        'user': user,
+        'student': student,
+    }
+
+    return render(request, 'user/student/student_detail.html', context)
+    
+    
+    
+#  학생 정보 수정
+def edit_student(request):
+    student = request.user.student
+
+    if request.method == 'POST':
+        form = StudentEditForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            return redirect('user:student_detail')  # Replace 'profile' with the appropriate URL name for the profile page
+    else:
+        form = StudentEditForm(instance=student)
+
+    return render(request, 'user/student/edit_student.html', {'form': form})
+
+
+
+def edit_password(request):
+    if request.method == 'POST':
+        password_form = PasswordChangeFormCustom(request.user, request.POST)
+
+        if password_form.is_valid():
+            user = password_form.save()
+            update_session_auth_hash(request, user)
+
+            messages.success(request, '비밀번호가 성공적으로 변경되었습니다.')
+            return redirect('user:edit_password')  # Replace 'profile' with the appropriate URL name for the profile page
+    else:
+        password_form = PasswordChangeFormCustom(request.user)
+
+    return render(request, 'user/student/edit_password.html', {'password_form': password_form})
+
+
+
+
 
 
 ## QR 코드 보여주기
@@ -133,16 +194,3 @@ def delete_division(request, division_id):
     return render(request, 'user/admin/admin_delete_division.html', {'division': division})
 
 
-#  학생 정보
-def student_detail(request, pk):
-    student = Student.objects.get(pk=pk)
-    user = User.objects.get(pk=student.user_id)
-    
-
-    context = {
-        'user': user,
-        'student': student,
-    }
-
-    return render(request, 'user/student/student_detail.html', context)
-    

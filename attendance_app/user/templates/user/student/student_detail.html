@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>학생 정보 표기</title>
+  <title>내 정보</title>
 </head>
 <body>
   {% include 'home/navbar.html' %}
@@ -16,14 +16,36 @@
 
       <br><br>
 
-      <h1><b>학생 정보</b></h1>
+      <h1><b>내 정보</b></h1>
 
-      <br><br><hr><br>
+      <br><br>
+      <a class="btn btn-primary" href="{% url 'user:edit_student' %}" role="button">개인정보 수정</a>
 
-      {{ user }}
-
-      {{ student }}
+      <a class="btn btn-warning" href="{% url 'user:edit_password' %}" role="button">비밀번호 수정</a>
       
+      <br><hr><br>
+
+      이름: {{ user.student.name }} <br><br>
+
+      <!-- 성별 표시 -->
+      {% if user.student.gender == 'M' %}
+        성별: 남 <br><br>
+
+      {% elif user.student.gender == 'F' %}
+        성별: 여 <br><br>
+
+      {% else %}
+        성별: 기타 <br><br>
+      {% endif %}
+
+      생년월일: {{ user.student.birth_date }} <br><br><br>
+      
+      ID : {{ user.username }} <br><br>
+      
+      
+      <br><br><br><br><hr><br>
+
+      <a class="btn btn-danger" href="#" role="button">회원 탈퇴</a>
 
   </div>
 </body>
