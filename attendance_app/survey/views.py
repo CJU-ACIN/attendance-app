@@ -3,8 +3,12 @@ from course.models import Course
 from survey.models import Survey, SurveyReply
 from user.models import Division
 
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+
 # Create your views here.
 # 설분 문반 선택 리스트
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def survey_division_list(request):
     division = Division.objects.all()
     
@@ -18,6 +22,7 @@ def survey_division_list(request):
 
 
 # 설문 리스트
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def survey_list(request, pk):
     division = Division.objects.get(pk=pk)
     course = Course.objects.filter(division_name_id=pk)
@@ -33,6 +38,7 @@ def survey_list(request, pk):
     
 
 # 설문 상세
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def survey_detail(request, pk):
     # 쿼리 변수 초기화
     survey = None
@@ -73,6 +79,7 @@ def survey_detail(request, pk):
 
 
 # 설문 상세
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def survey_reply_detail(request, pk):
     survey_reply = get_object_or_404(SurveyReply, pk=pk)
     survey = get_object_or_404(Survey, pk=survey_reply.survey_id.pk)

@@ -6,8 +6,11 @@ from user.models import Division
 from course.forms import CourseForm
 from survey.forms import SurveyForm
 
+from django.contrib.auth.decorators import login_required, user_passes_test
+
 
 # Create your views here.
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def course_list(request, pk):
     division = Division.objects.get(pk=pk)
     course = Course.objects.filter(division_name_id=pk)
@@ -21,6 +24,7 @@ def course_list(request, pk):
 
 
 # 강좌 추가
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def create_course(request):
     if request.method == 'POST':
         course_form = CourseForm(request.POST)
@@ -50,6 +54,7 @@ def create_course(request):
 
 
 # 강좌 상세 페이지
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def course_detail(request, pk):
     course = get_object_or_404(Course, pk=pk)
     context = {'course': course}
@@ -57,6 +62,7 @@ def course_detail(request, pk):
 
 
 # 강좌 수정
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def edit_course(request, pk):
     course = get_object_or_404(Course, pk=pk)
     
@@ -73,6 +79,7 @@ def edit_course(request, pk):
 
 
 # 강좌 삭제
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def delete_course(request, pk):
     course = get_object_or_404(Course, pk=pk)
     if request.method == 'POST':
