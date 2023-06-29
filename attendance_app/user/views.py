@@ -131,3 +131,18 @@ def delete_division(request, division_id):
         return redirect('user:division_list')  # 적절한 URL로 리다이렉트
     
     return render(request, 'user/admin/admin_delete_division.html', {'division': division})
+
+
+#  학생 정보
+def student_detail(request, pk):
+    student = Student.objects.get(pk=pk)
+    user = User.objects.get(pk=student.user_id)
+    
+
+    context = {
+        'user': user,
+        'student': student,
+    }
+
+    return render(request, 'user/student/student_detail.html', context)
+    

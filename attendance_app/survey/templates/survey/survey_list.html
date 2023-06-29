@@ -13,13 +13,13 @@
   <br><br><br>
     <div class="container">
 
-    <a class="btn btn-secondary" href="{% url 'user:admin_home' %}" role="button">관리자 페이지로</a>
+    <a class="btn btn-secondary" href="{% url 'survey:survey_division_list' %}" role="button">분반 목록으로</a>
 
     <br><br>
-      <h1><b>강의 평가 조회</b></h1>
+      <h1><b>{{ division.name }} -- 강의 평가 조회</b></h1>
 
       <br>
-      클릭해서 상세 정보를 확인하세요.
+      원하는 강의를 클릭해서 상세 정보를 확인하세요.
       <br><br>
 
       <div class="list-group">
