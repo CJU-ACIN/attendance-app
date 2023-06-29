@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404, get_list_or_40
 from course.models import Course, ClassAttend
 from course.forms import CourseForm, ClassAttendInForm
 from survey.forms import SurveyForm
-
+from user.models import Division
 from user.models import Student
 
 import datetime
@@ -127,10 +127,15 @@ def attendance_check_out(request, pk):
        return render(request, 'attendance/attendance_error.html')
 
 # 강좌 리스트
-def course_list(request):
-    course = Course.objects.all()
+def course_list(request, pk):
+    division = Division.objects.get(pk=pk)
+    course = Course.objects.filter(division_name_id=pk)
     
-    context = {'course': course}
+    context = {
+        'course': course,
+        'division': division,
+        
+        }
     return render(request, 'course/course_list.html', context)
 
 
@@ -141,8 +146,13 @@ def create_course(request):
         survey_form = SurveyForm(request.POST)
         
         if course_form.is_valid() and survey_form.is_valid():
-            course_form.save()
+            # 코스 저장
+            course = course_form.save()
+            survey = survey_form.save(commit=False)
+            
+            survey.course_id_id = course.id
             survey_form.save()
+  
             return redirect('course:course_list')  # 적절한 URL로 리다이렉트
 
 
@@ -154,6 +164,7 @@ def create_course(request):
         'course_form': course_form,
         'survey_form': survey_form,
     }
+    
     return render(request, 'course/create_course.html', context)
 
 

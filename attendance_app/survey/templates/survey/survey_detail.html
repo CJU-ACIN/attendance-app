@@ -13,7 +13,7 @@
   <br><br><br>
     <div class="container">
 
-      <a class="btn btn-warning" href="{% url 'survey:survey_list' %}" role="button">평가 목록으로</a>
+      <a class="btn btn-warning" href="{% url 'survey:survey_list' division.pk %}" role="button"> {{division.name}} 분반 강의 목록으로 </a>
 
       <br><br><br>
       상세 페이지

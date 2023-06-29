@@ -12,11 +12,11 @@
   {% include 'home/navbar.html' %}
   <br><br><br>
     <div class="container">
-      <a class="btn btn-secondary" href="{% url 'user:admin_home' %}" role="button">관리자 페이지로</a>
+      <a class="btn btn-secondary" href="{% url 'user:division_list' %}" role="button">관리자 페이지로</a>
 
       <br><br>
 
-      <h1><b>전체 강의</b></h1>
+      <h1><b>{{division.name}} -- 강의 목록</b></h1>
 
       <br>
       클릭해서 상세 정보를 확인하세요.

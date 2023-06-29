@@ -15,7 +15,13 @@
                 <div class="card-header">
                   <h4>Login</h4>
                 </div>
+                
                 <div class="card-body">
+                  {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                  {% endif %}
 
                   <form action="{% url 'home:login' %}" method="post">
                     {% csrf_token %}

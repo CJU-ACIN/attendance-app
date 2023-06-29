@@ -12,8 +12,9 @@
   {% include 'home/navbar.html' %}
   <br><br><br>
     <div class="container">
-
-      <a class="btn btn-warning" href="{% url 'course:course_list' %}" role="button">강의 목록으로</a>
+      <a class="btn btn-warning" href="{% url 'course:course_list' course.division_name_id %}" role="button">
+        강의 목록으로
+      </a>
 
       <br><br><br>
       상세 페이지

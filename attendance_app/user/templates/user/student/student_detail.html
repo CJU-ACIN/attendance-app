@@ -1,0 +1,30 @@
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>학생 정보 표기</title>
+</head>
+<body>
+  {% include 'home/navbar.html' %}
+  <br><br><br>
+    <div class="container">
+      <a class="btn btn-secondary" href="{% url 'home:home' %}" role="button">메인 페이지로</a>
+
+      <br><br>
+
+      <h1><b>학생 정보</b></h1>
+
+      <br><br><hr><br>
+
+      {{ user }}
+
+      {{ student }}
+      
+
+  </div>
+</body>
+</html>
