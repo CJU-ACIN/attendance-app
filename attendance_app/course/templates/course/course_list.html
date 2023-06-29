@@ -12,6 +12,10 @@
   {% include 'home/navbar.html' %}
   <br><br><br>
     <div class="container">
+      <a class="btn btn-secondary" href="{% url 'user:admin_home' %}" role="button">관리자 페이지로</a>
+
+      <br><br>
+
       <h1><b>전체 강의</b></h1>
 
       <br>
@@ -23,7 +27,7 @@
       <div class="list-group">
         {% for c in course %}
           <a href="{% url 'course:course_detail' c.pk %}" class="list-group-item list-group-item-action">
-            [{{ c.division_name }}] <b>{{ c.course_name }}</b> (강사: {{ c.teacher_name }})
+            [{{ c.division_name }}] <b>{{ c.course_name }}</b> (강사: {{ c.teacher_name }}) - <i>수업시간: {{ c.hours }}시간</i>
           </a>
         {% endfor %}
       </div>

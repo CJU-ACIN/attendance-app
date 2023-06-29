@@ -1,26 +1,28 @@
 from django.db import models
 from course.models import Course
-
+from django.shortcuts import get_object_or_404
 
 # Create your models here.
-
-
-
+#설문 양식
 class Survey(models.Model):
-    course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
-    question_num = models.IntegerField()
-    question = models.CharField(max_length=100)
+    course_id = models.OneToOneField(Course, on_delete=models.CASCADE)
+    question1 = models.CharField(max_length=100)
+    question2 = models.CharField(max_length=100, blank=True)
+    question3 = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        course = get_object_or_404(Course, pk=self.course_id.pk)
+        return f'[{course.course_name}] 설문지 양식'
 
 
+# 설문 답변
 class SurveyReply(models.Model):
     survey_id = models.ForeignKey(Survey, on_delete=models.CASCADE)
-    reply_num = models.IntegerField()
-    reply = models.TextField()
-
-
-# 사용 안함
-class FixedSurveyReply(models.Model):
-    course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
-    reply1 = models.CharField(max_length=300)
-    reply2 = models.CharField(max_length=300)
-    reply3 = models.CharField(max_length=300)
+    reply1 = models.TextField()
+    reply2 = models.TextField(blank=True)
+    reply3 = models.TextField(blank=True)
+    
+    def __str__(self):
+        survey = get_object_or_404(Survey, pk=self.survey_id.pk)
+        course = get_object_or_404(Course, pk=survey.course_id.pk)
+        return f'[{course.course_name}] 설문지 답변 - {self.pk}'

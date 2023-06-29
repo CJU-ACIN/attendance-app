@@ -16,7 +16,7 @@ class Course(models.Model):
     hours = models.IntegerField()
     
     def __str__(self):
-        return f'[{self.division_name}] {self.course_name} (강사: {self.teacher_name})'
+        return f'[{self.division_name}] {self.course_name} (강사: {self.teacher_name}) - 수업시간: {self.hours}'
 
 
 # 강의에 대한 학생 출석
