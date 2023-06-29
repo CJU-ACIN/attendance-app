@@ -36,7 +36,8 @@ class CourseForm(forms.ModelForm):
         self.fields['end_at'].widget.attrs.update({'class': 'form-control'})
         self.fields['hours'].widget.attrs.update({'class': 'form-control'})
 
-class ClassAttendForm(forms.ModelForm):
+class ClassAttendInForm(forms.ModelForm):
     class Meta:
         model = ClassAttend
-        fields = ['course_id', 'student_id', 'start_at']
+        fields = '__all__'
+        exclude = ['end_at', 'submit_survey', 'attend_state']

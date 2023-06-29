@@ -1,6 +1,7 @@
 from django.db import models
 from user.models import Student, Division
 
+from datetime import time
 # Create your models here.
 
 
@@ -23,7 +24,7 @@ class ClassAttend(models.Model):
     course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
     student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
     start_at = models.TimeField()
-    end_at = models.TimeField(default=None)
+    end_at = models.TimeField(default=time(0, 0))
     submit_survey = models.BooleanField(default=False)
-    attend_state = models.BooleanField(default=False)
+    attend_state = models.BooleanField(default=False) # 출결 확인
 

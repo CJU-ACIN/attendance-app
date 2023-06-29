@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
-from course.models import Course
-from course.forms import CourseForm, ClassAttendForm
+from course.models import Course, ClassAttend
+from course.forms import CourseForm, ClassAttendInForm
 from user.models import Student
 
 import datetime
@@ -21,7 +21,7 @@ def QRScanner_in(request, pk):
 
             # 현재 시간( 년도-월-일-시각-분)
             now = datetime.datetime.now()
-            time_now = now.now
+            time_now = now.strftime('%H:%M:%S')
                 
 
             context = {
@@ -32,7 +32,7 @@ def QRScanner_in(request, pk):
             }
             
             # 출석체크 페이지로 이동
-            return render(request, 'course/attendance_check.html', context)
+            return render(request, 'attendance/attendance_check.html', context)
         except Student.DoesNotExist:
             print("유효한 QR코드가 입력값으로 들어오지 않았습니다.")
             qr_error = True # qr 에러 처리
@@ -40,13 +40,13 @@ def QRScanner_in(request, pk):
                 'course' : course,
                 'qr_error'  : qr_error, 
             }
-            return render(request, 'course/QRScanner_in.html', context)
+            return render(request, 'attendance/QRScanner_in.html', context)
     context = {
         'course' : course,
         'qr_error'  : qr_error,
     }
 
-    return render(request, 'course/QRScanner_in.html', context)
+    return render(request, 'attendance/QRScanner_in.html', context)
 
 
 def QRScanner_out(request, pk):
@@ -74,7 +74,7 @@ def QRScanner_out(request, pk):
             }
             
             # 출석체크 페이지로 이동
-            return render(request, 'course/attendance_check.html', context)
+            return render(request, 'attendance/attendance_check.html', context)
         except Student.DoesNotExist:
             print("유효한 QR코드가 입력값으로 들어오지 않았습니다.")
             qr_error = True # qr 에러 처리
@@ -82,23 +82,47 @@ def QRScanner_out(request, pk):
                 'course' : course,
                 'qr_error'  : qr_error,
             }
-            return render(request, 'course/QRScanner_out.html', context)
+            return render(request, 'attendance/QRScanner_out.html', context)
     context = {
         'course' : course,
         'qr_error'  : qr_error,
     }
 
-    return render(request, 'course/QRScanner_out.html', context)
+    return render(request, 'attendance/QRScanner_out.html', context)
 
-# 출석 체크 하기
-def attendance_check(request):
+# 출석 체크 모듈에 데이터 넣기
+def attendance_check_in(request):
     if request.method == 'POST':
-        form = ClassAttendForm(request.POST)
+        print("post입력 확인")
+        form = ClassAttendInForm(request.POST)
+        if form.is_valid():
+            print("form 유효성 성공")
+            classAttend = form.save()
+            return redirect('course:attendance_check_in_success', pk=classAttend.pk)  # 식별자(pk)를 URL에 포함시켜 리디렉션
+        else:
+            errors = form.errors.as_text()
+            print(errors)  # 에러 메시지 출력 또는 원하는 동작 수행
+            return render(request, 'attendance/attendance_error.html', {'form': form})
+    else:
+        return render(request, 'attendance/attendance_error.html')
+
+# 출석 성공 페이지
+def attendance_check_in_success(request, pk):
+    classAttend = ClassAttend.objects.get(pk=pk)  # 식별자(pk)를 사용하여 클래스 인스턴스 조회
+    course = classAttend.course_id
+    student = classAttend.student_id
+
+    context =  {'classAttend': classAttend, 'course': course, 'student': student}
+    return render(request, 'attendance/attendance_check_in_success.html', context)
+
+def attendance_check_out(request, pk):
+    if request.method == 'POST':
+        form = ClassAttendInForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('success-page')
+            return render('attendance/attendance_check_out.html')
     else:
-        return render(request, 'add_classattend.html')
+       return render(request, 'attendance/attendance_error.html')
 
 # 강좌 리스트
 def course_list(request):
