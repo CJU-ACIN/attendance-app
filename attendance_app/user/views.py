@@ -120,7 +120,7 @@ def edit_password(request):
             update_session_auth_hash(request, user)
 
             messages.success(request, '비밀번호가 성공적으로 변경되었습니다.')
-            return redirect('user:edit_password')  # Replace 'profile' with the appropriate URL name for the profile page
+            return redirect('user:student_detail')  # Replace 'profile' with the appropriate URL name for the profile page
     else:
         password_form = PasswordChangeFormCustom(request.user)
 
