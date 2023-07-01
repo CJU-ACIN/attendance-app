@@ -4,8 +4,9 @@ from course.forms import CourseForm, ClassAttendInForm
 from survey.forms import SurveyForm
 from user.models import Division
 from user.models import Student
+from django.db.models import Q
 
-import datetime
+from datetime import datetime
 # Create your views here.
 
 # QR코드 스캐너 & 스캔후 데이터 받아서 출결 찍기
@@ -64,7 +65,7 @@ def QRScanner_out(request, pk):
             print("url 데이터 : " + student.name)
 
             # 현재 시간( 년도-월-일-시각-분)
-            now = datetime.datetime.now()
+            now = datetime.now()
             time_now = str(now.strftime('%Y-%m-%d %H:%M'))
                 
 
@@ -92,19 +93,34 @@ def QRScanner_out(request, pk):
 
     return render(request, 'attendance/QRScanner_out.html', context)
 
-# 출석 체크 모듈에 데이터 넣기
+### 입실,퇴실 체크 모듈에 데이터 넣기
+
+#입실용
 def attendance_check_in(request):
     if request.method == 'POST':
         print("post입력 확인")
         form = ClassAttendInForm(request.POST)
-        if form.is_valid():
-            print("form 유효성 성공")
-            classAttend = form.save()
-            return redirect('course:attendance_check_in_success', pk=classAttend.pk)  # 식별자(pk)를 URL에 포함시켜 리디렉션
-        else:
-            errors = form.errors.as_text()
-            print(errors)  # 에러 메시지 출력 또는 원하는 동작 수행
-            return render(request, 'attendance/attendance_error.html', {'form': form})
+        class_attend = form.save(commit=False)
+        # 데이터 조회
+        attend_data = ClassAttend.objects.filter(Q(course_id=class_attend.course_id) & Q(student_id=class_attend.student_id))
+        
+        if len(attend_data) == 0:
+            # 데이터가 0개인 경우
+            if form.is_valid():
+                print("form 유효성 성공")
+                classAttend = form.save()
+                return redirect('course:attendance_check_in_success', pk=classAttend.pk)  # 식별자(pk)를 URL에 포함시켜 리디렉션
+            else:
+                errors = form.errors.as_text()
+                print(errors)  # 에러 메시지 출력 또는 원하는 동작 수행
+                return render(request, 'attendance/attendance_error.html', {'form': form})
+        else :
+            # 데이터가 1개 이상인 경우
+            form = ClassAttendInForm(request.POST)
+            course = class_attend.course_id
+            student = class_attend.student_id
+            context = {'course': course, 'student': student}
+            return render(request, 'attendance/attendance_already_exists.html', context)
     else:
         return render(request, 'attendance/attendance_error.html')
 
@@ -117,14 +133,33 @@ def attendance_check_in_success(request, pk):
     context =  {'classAttend': classAttend, 'course': course, 'student': student}
     return render(request, 'attendance/attendance_check_in_success.html', context)
 
-def attendance_check_out(request, pk):
+# 퇴실용
+def attendance_check_out(request):
     if request.method == 'POST':
-        form = ClassAttendInForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return render('attendance/attendance_check_out.html')
+        course_id = request.POST.get('course_id')
+        student_id = request.POST.get('student_id')
+
+        end_at = request.POST.get('end_at')
+        time_string = end_at
+        parsed_time = datetime.strptime(time_string, "%Y-%m-%d %H:%M")
+        formatted_time = parsed_time.strftime("%H:%M")
+        print(formatted_time)
+
+        classAttend = ClassAttend.objects.get(Q(course_id=course_id) & Q(student_id=student_id))
+        print(classAttend)
+        if classAttend.submit_survey !=True:
+            ...
+        classAttend.end_at = formatted_time
+        classAttend.save()
+        context = {
+            'classAttend' : classAttend,
+            'course' : course_id,
+            'student' : student_id,
+        }
+        return render(request,'attendance/attendance_check_out.html', context)
     else:
        return render(request, 'attendance/attendance_error.html')
+
 
 # 강좌 리스트
 def course_list(request, pk):

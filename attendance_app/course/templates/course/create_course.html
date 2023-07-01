@@ -16,7 +16,7 @@
 
       <form method="post">
         {% csrf_token %}
-        <a class="btn btn-secondary" href="{% url 'course:course_list' %}" role="button">뒤로 가기</a>
+        <a class="btn btn-secondary" href="javascript:history.back()" role="button">뒤로 가기</a>
         <button type="submit" class="btn btn-primary">강의 생성</button>
         <br><hr><br>
 
@@ -41,7 +41,7 @@
           <div class="col-6">
             <h3>설문조사 질문 입력!</h3>
             <br><br>
-            
+             
             {% for field in survey_form %}
             <div class="row">
               <div class="col-6">

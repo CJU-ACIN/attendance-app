@@ -1,5 +1,6 @@
 from django.db import models
 from course.models import Course
+from user.models import Student
 from django.shortcuts import get_object_or_404
 
 # Create your models here.
@@ -17,11 +18,12 @@ class Survey(models.Model):
 
 # 설문 답변
 class SurveyReply(models.Model):
+    student_id = models.ForeignKey(Student, on_delete=models.CASCADE, default=0)
     survey_id = models.ForeignKey(Survey, on_delete=models.CASCADE)
     reply1 = models.TextField()
     reply2 = models.TextField(blank=True)
     reply3 = models.TextField(blank=True)
-    
+    submit_survey = models.BooleanField(default=False)
     def __str__(self):
         survey = get_object_or_404(Survey, pk=self.survey_id.pk)
         course = get_object_or_404(Course, pk=survey.course_id.pk)

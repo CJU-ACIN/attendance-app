@@ -17,5 +17,5 @@ urlpatterns = [
     path('QRScanner_out/<int:pk>/', views.QRScanner_out, name='QRScanner_out'),
     path('attendance_check_in', views.attendance_check_in, name='attendance_check_in'),
     path('attendance_check_in_success/<int:pk>/', views.attendance_check_in_success, name='attendance_check_in_success'),
-    path('attendance_check_out/<int:pk>/', views.attendance_check_out, name='attendance_check_out'),
+    path('attendance_check_out', views.attendance_check_out, name='attendance_check_out'),
 ]

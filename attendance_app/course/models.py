@@ -25,6 +25,5 @@ class ClassAttend(models.Model):
     student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
     start_at = models.TimeField()
     end_at = models.TimeField(default=time(0, 0))
-    submit_survey = models.BooleanField(default=False)
     attend_state = models.BooleanField(default=False) # 출결 확인
 
