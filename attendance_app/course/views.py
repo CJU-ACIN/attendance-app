@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
-from course.models import Course, ClassAttend
+
 from course.forms import CourseForm, ClassAttendInForm
 from survey.forms import SurveyForm
+
+from course.models import Course, ClassAttend
 from user.models import Division
 from user.models import Student
+from survey.models import SurveyReply
 from django.db.models import Q
+
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 from datetime import datetime
@@ -24,7 +28,7 @@ def QRScanner_in(request, pk):
             print("url 데이터 : " + student.name)
 
             # 현재 시간( 년도-월-일-시각-분)
-            now = datetime.datetime.now()
+            now = datetime.now()
             time_now = now.strftime('%H:%M:%S')
                 
 
@@ -148,14 +152,22 @@ def attendance_check_out(request):
 
         classAttend = ClassAttend.objects.get(Q(course_id=course_id) & Q(student_id=student_id))
         print(classAttend)
-        if classAttend.submit_survey !=True:
-            ...
+
+        # 설문지 제출했는지 확인
+        # survey_reply = SurveyReply.objects.get(Q(course_id=course_id) & Q(student_id=student_id))
+        # if survey_reply.submit_survey !=True:
+        #    ...
+        
         classAttend.end_at = formatted_time
+        classAttend.attend_state = True
         classAttend.save()
+        
+        course = classAttend.course_id
+        student = classAttend.student_id
+        # 건네줄 cotext
         context = {
-            'classAttend' : classAttend,
-            'course' : course_id,
-            'student' : student_id,
+            'course' : course,
+            'student' : student,
         }
         return render(request,'attendance/attendance_check_out.html', context)
     else:
