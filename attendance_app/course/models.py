@@ -27,3 +27,5 @@ class ClassAttend(models.Model):
     end_at = models.TimeField(default=time(0, 0))
     attend_state = models.BooleanField(default=False) # 출결 확인
 
+    def __str__(self):
+        return f'[{self.course_id.course_name} 출석] {self.student_id.name}'

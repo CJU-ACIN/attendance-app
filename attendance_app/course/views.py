@@ -254,3 +254,53 @@ def delete_course(request, pk):
     
     context = {'course': course}
     return render(request, 'course/delete_course.html', context)
+
+
+# 출석 분반 선택
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
+def attendance_divison_list(request):
+    division = Division.objects.all()
+
+    context = {
+        'division': division
+    }
+
+    return render(request, 'attendance_board/attendance_division_list.html', context)
+
+
+# 출석 강의 선택
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
+def attendance_course_list(request, pk):
+    # pk -> division_id
+    course = Course.objects.filter(division_name_id=pk)
+
+    context = {
+        'course': course
+    }
+
+    return render(request, 'attendance_board/attendance_course_list.html', context)
+
+
+# 강의별 출석 명단
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
+def attendance_course_board(request, pk):
+    # pk -> course_id
+    course = Course.objects.get(pk=pk)
+
+    division = Division.objects.get(pk=course.division_name_id)
+    
+    students = Student.objects.filter(division_id=division.pk)
+    class_attends = ClassAttend.objects.filter(student_id__division_id=division.pk)
+
+    print(f'{class_attends = }')
+
+    context = {
+        'course': course,
+        'class_attends': class_attends,
+        'students': students,
+        'division': division,
+        
+    }
+
+    return render(request, 'attendance_board/attendance_course_board.html', context)
+
