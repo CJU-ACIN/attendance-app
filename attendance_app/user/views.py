@@ -14,13 +14,20 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import make_password
 from django.core.files import File
 from pathlib import Path
-import qrcode, os
+
 from io import BytesIO
 
 from user.forms import DivisionForm
+from django.contrib.auth import update_session_auth_hash
 
+from user.forms import DivisionForm, StudentEditForm, PasswordChangeFormCustom
+
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+import qrcode, os
 # Create your views here.
 # 관리자 페이지
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def admin_home(request):
     return render(request, 'user/admin/admin_home.html')
 
@@ -93,21 +100,85 @@ def signup(request):
         signup_form = SignUpForm()
         client_form = ClientForm()
 
-    return render(request, 'user/student/signup.html', {'signup_form': signup_form, 'client_form': client_form})
+    context = {
+        'signup_form': signup_form, 
+        'client_form': client_form,
+        
+        }
+    
+    return render(request, 'user/student/signup.html', context)
+
+
+#  학생 정보
+@login_required
+def student_detail(request):
+    user = User.objects.get(pk=request.user.pk)
+    student = Student.objects.get(user_id=request.user.pk)
+    
+    
+    context = {
+        'user': user,
+        'student': student,
+    }
+
+    return render(request, 'user/student/student_detail.html', context)
+    
+    
+    
+#  학생 정보 수정
+@login_required
+def edit_student(request):
+    student = request.user.student
+
+    if request.method == 'POST':
+        form = StudentEditForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            return redirect('user:student_detail')  # Replace 'profile' with the appropriate URL name for the profile page
+    else:
+        form = StudentEditForm(instance=student)
+
+    return render(request, 'user/student/edit_student.html', {'form': form})
+
+
+# 비밀번호 수정
+@login_required
+def edit_password(request):
+    if request.method == 'POST':
+        password_form = PasswordChangeFormCustom(request.user, request.POST)
+
+        if password_form.is_valid():
+            user = password_form.save()
+            update_session_auth_hash(request, user)
+
+            messages.success(request, '비밀번호가 성공적으로 변경되었습니다.')
+            return redirect('user:student_detail')  # Replace 'profile' with the appropriate URL name for the profile page
+    else:
+        password_form = PasswordChangeFormCustom(request.user)
+
+    return render(request, 'user/student/edit_password.html', {'password_form': password_form})
+
+
+
+
 
 ## QR 코드 보여주기
 # 입실    
+@login_required
 def show_in_qr(request):
     return render(request, 'user/student/show_in_qr.html')
 
 
 # 퇴실    
+@login_required
 def show_out_qr(request):
     return render(request, 'user/student/show_out_qr.html')
 
 
+########## 관리자 권한 필요 ################
 ## 분반
 # 분반 목록
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def division_list(request):
     divison = Division.objects.all()
     
@@ -116,6 +187,7 @@ def division_list(request):
 
 
 # 분반 추가
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def create_division(request):
     if request.method == 'POST':
         form = DivisionForm(request.POST)
@@ -131,6 +203,7 @@ def create_division(request):
 
 
 # 분반 수정
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def edit_division(request, division_id):
     division = get_object_or_404(Division, pk=division_id)
 
@@ -148,6 +221,7 @@ def edit_division(request, division_id):
 
 
 # 분반 삭제
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def delete_division(request, division_id):
     division = get_object_or_404(Division, pk=division_id)
     
@@ -158,16 +232,3 @@ def delete_division(request, division_id):
     return render(request, 'user/admin/admin_delete_division.html', {'division': division})
 
 
-#  학생 정보
-def student_detail(request, pk):
-    student = Student.objects.get(pk=pk)
-    user = User.objects.get(pk=student.user_id)
-    
-
-    context = {
-        'user': user,
-        'student': student,
-    }
-
-    return render(request, 'user/student/student_detail.html', context)
-    

@@ -41,7 +41,7 @@
                         <a class="nav-link" aria-current="page" href="{% url 'home:home' %}">QR 출석</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="">내 정보</a>
+                        <a class="nav-link" href="{% url 'user:student_detail' %}">내 정보</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">내 출석</a>
@@ -50,10 +50,8 @@
                     <li class="nav-item">
                       <a class="nav-link" aria-current="page" href="{% url 'home:logout' %}">로그아웃</a>
                     </li>
-                    
-                    {{ user.pk }}
-                    {{ user.student.pk }}
 
+                    <!-- 환영합니다. XXX 님 보여주기 -->
                     {% if user.student %}
                     <span class="navbar-text mr-3">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 환영합니다, <b> {{ user.student }} </b>
