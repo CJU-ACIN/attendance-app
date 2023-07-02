@@ -1,5 +1,5 @@
 from django import forms
-from survey.models import Survey
+from survey.models import Survey, SurveyReply
 
 class SurveyForm(forms.ModelForm):
     class Meta:
@@ -16,3 +16,8 @@ class SurveyForm(forms.ModelForm):
             'question2': '질문 2',
             'question3': '질문 3',
         }
+
+class SurveyReplyForm(forms.ModelForm):
+    class Meta:
+        model = SurveyReply
+        fields = ('reply1', 'reply2', 'reply3')

@@ -6,7 +6,7 @@ from survey.forms import SurveyForm
 from course.models import Course, ClassAttend
 from user.models import Division
 from user.models import Student
-from survey.models import SurveyReply
+from survey.models import SurveyReply,Survey
 from django.db.models import Q
 
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -120,12 +120,12 @@ def attendance_check_in(request):
                 print(errors)  # 에러 메시지 출력 또는 원하는 동작 수행
                 return render(request, 'attendance/attendance_error.html', {'form': form})
         else :
-            # 데이터가 1개 이상인 경우
+            # 데이터가 1개 이상인 경우 (출입을 이미 한 경우)
             form = ClassAttendInForm(request.POST)
             course = class_attend.course_id
             student = class_attend.student_id
             context = {'course': course, 'student': student}
-            return render(request, 'attendance/attendance_already_exists.html', context)
+            return render(request, 'attendance/attendance_already_in.html', context)
     else:
         return render(request, 'attendance/attendance_error.html')
 
@@ -135,7 +135,15 @@ def attendance_check_in_success(request, pk):
     course = classAttend.course_id
     student = classAttend.student_id
 
-    context =  {'classAttend': classAttend, 'course': course, 'student': student}
+    # 현재 듣고있는 강의 필드에 추가
+    student.current_course_name = course.course_name
+    student.save()
+    
+    context =  {
+        'classAttend': classAttend, 
+        'course': course, 
+        'student': student
+    }
     return render(request, 'attendance/attendance_check_in_success.html', context)
 
 # 퇴실용
@@ -158,16 +166,39 @@ def attendance_check_out(request):
         # if survey_reply.submit_survey !=True:
         #    ...
         
+        ### 퇴실 예외처리 부분
+        # 강의평가를 제출했는지 확인 
+        survey = Survey.objects.get(course_id=classAttend.course_id)
+        try :
+            survey_reply = SurveyReply.objects.get(student_id=classAttend.student_id, survey_id=survey)
+            # 2차 검증
+            if survey_reply.submit_survey == False:
+                return render(request, 'attendance/attendance_submit_error.html', {'student' : classAttend.student_id, "course" : classAttend.course_id})
+        except SurveyReply.DoesNotExist : 
+            # 강의평가를 제출하지 않았으면 
+            return render(request, 'attendance/attendance_submit_error.html', {'student' : classAttend.student_id, "course" : classAttend.course_id})            
+        
+        # classAttend.attend_state(퇴실 처리를 이미 했으면)
+        if classAttend.attend_state == True :
+            return render(request,'attendance/attendance_already_out.html', {'student' : classAttend.student_id, "course" : classAttend.course_id})
+        
+        
         classAttend.end_at = formatted_time
         classAttend.attend_state = True
         classAttend.save()
         
         course = classAttend.course_id
         student = classAttend.student_id
+
+        # 퇴실까지 완료하면 다시 리셋
+        student.current_course_name = "수강중인 강의 없음"
+        student.save()
+
         # 건네줄 cotext
         context = {
             'course' : course,
             'student' : student,
+            'classAttend' : classAttend,
         }
         return render(request,'attendance/attendance_check_out.html', context)
     else:

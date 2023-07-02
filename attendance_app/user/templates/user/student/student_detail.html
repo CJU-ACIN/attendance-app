@@ -24,7 +24,8 @@
       <a class="btn btn-warning" href="{% url 'user:edit_password' %}" role="button">비밀번호 수정</a>
       
       <br><hr><br>
-
+      ID : {{ user.username }} <br><br>
+      
       이름: {{ user.student.name }} <br><br>
 
       <!-- 성별 표시 -->
@@ -40,7 +41,7 @@
 
       생년월일: {{ user.student.birth_date }} <br><br><br>
       
-      ID : {{ user.username }} <br><br>
+      
       
       
       <br><br><br><br><hr><br>

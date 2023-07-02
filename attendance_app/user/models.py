@@ -24,5 +24,8 @@ class Student(models.Model):
     division = models.ForeignKey(Division, on_delete=models.CASCADE)
     qr_code = models.ImageField(upload_to='qr_codes/')
 
+    # 현재 수강중인 강의 추가
+    current_course_name = models.CharField(max_length=20, default="수강중인 강의 없음", null=True)
+
     def __str__(self):
         return self.name

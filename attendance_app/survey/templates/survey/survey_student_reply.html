@@ -1,0 +1,37 @@
+<p>{{ student.name }} 님 {{ student_course.course_name }}에 대한 강의 평가를 해주세요</p>
+<p>* 강의평가는 필수로 제출하셔야 정상 퇴실 처리 됩니다.</p>
+
+<form method="POST" action="{% url 'survey:survey_student_submit' %}">
+    {% csrf_token %}
+
+
+    <input type="hidden" name="student_id" value="{{ student.id }}">
+    <input type="hidden" name="survey_id" value="{{ course_survey.id }}">
+
+    <br>
+    {% if course_survey.question1 != None %}
+    {{ course_survey.question1 }}
+    <!-- reply3 -->
+    <br>
+    <input type="text" name="reply1" id="reply1" minlength="5" required>
+    <br><br>
+    {% endif %}
+
+    {% if course_survey.question2 != None %}
+    {{ course_survey.question2 }}
+    <!-- reply2 -->
+    <br>
+    <input type="text" name="reply2" id="reply2" minlength="5" required>
+    <br><br>
+    {% endif %}
+
+    {% if course_survey.question3 != None %}
+    {{ course_survey.question3 }}
+    <!-- reply3 -->
+    <br>
+    <input type="text" name="reply3" id="reply3" minlength="5" required>
+    <br><br>
+    {% endif %}
+
+    <button type="submit">제출</button>
+</form>

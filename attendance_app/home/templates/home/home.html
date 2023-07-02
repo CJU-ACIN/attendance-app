@@ -51,19 +51,19 @@
 
       <!-- 학생일 때, -->
       {% else %}
-        <div class="btn-div d-grid gap-2">
-          <a role="button" class="btn btn-success" type="button" href="{% url 'user:show_in_qr' %}">
-            <div class="text-container">
-              <span class="btn-text"><b>입실</b></span>
-            </div>
+      <p>현재 수강중인 과목 : {{user.student.current_course_name}}</p>
+      <div class="btn-div d-grid gap-2">
+        <a role="button" class="btn btn-success" type="button" href="{% url 'user:show_in_qr' %}">
+          <span class="btn-text"><b>입실</b></span>
+        </a>
+        {% if user.student.current_course_name != "수강중인 강의 없음" %}
+          <a role="button" class="btn btn-info" type="button" href="{% url 'survey:survey_student_reply' user.student.pk %}">
+            <span class="btn-text"><b>퇴실</b></span>
           </a>
-    
-          <a role="button" class="btn btn-info" type="button" href="{% url 'user:show_out_qr' %}">
-            <div class="text-container">
-              <span class="btn-text"><b>퇴실</b></span>
-            </div>
-          </a>
-        </div>
+        {% endif %}
+      </div>
+
+  
       {% endif %}
     
     <!-- 로그인을 안했을 때 -->

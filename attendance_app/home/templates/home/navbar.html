@@ -29,6 +29,7 @@
                       {% if user.student %}
                       <span class="navbar-text mr-3">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 환영합니다, <b> {{ user.student }} </b>
+
                       </span>
                       {% else %}
                       <span class="navbar-text mr-3">
@@ -50,11 +51,11 @@
                     <li class="nav-item">
                       <a class="nav-link" aria-current="page" href="{% url 'home:logout' %}">로그아웃</a>
                     </li>
-
                     <!-- 환영합니다. XXX 님 보여주기 -->
                     {% if user.student %}
                     <span class="navbar-text mr-3">
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 환영합니다, <b> {{ user.student }} </b>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 환영합니다, <b> {{ user.student }}님 </b>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b> {{ user.student.division }} 과정 수료중입니다.</b>
                     </span>
                     {% else %}
                     <span class="navbar-text mr-3">

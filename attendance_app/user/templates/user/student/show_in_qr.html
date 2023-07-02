@@ -24,15 +24,17 @@
 </head>
 <body>
     {% include 'home/navbar.html' %}
-
+    
     <div class="container p-3">
+      <a class="btn btn-primary" href="{% url 'home:home' %}" role="button">메인 페이지로 가기</a>
         <div class="centered-div">
+          <div class="text-center">
+          </div>
             <div class="center-content">
               <h1><b>{{user.student.name}} 님의 입실 QR</b></h1>
               <img class="p-3" src="{{user.student.qr_code.url}}" alt="qr_example.png">
             </div>
         </div>
-        
     </div>
     
 </body>
