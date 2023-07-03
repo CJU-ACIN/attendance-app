@@ -321,7 +321,7 @@ def attendance_course_board(request, pk):
     division = Division.objects.get(pk=course.division_name_id)
     
     students = Student.objects.filter(division_id=division.pk)
-    class_attends = ClassAttend.objects.filter(student_id__division_id=division.pk)
+    class_attends = ClassAttend.objects.filter(Q(student_id__division_id=division.pk) & Q(course_id_id=course))
 
     print(f'{class_attends = }')
 
@@ -349,8 +349,16 @@ def student_attendance_update(request):
         
         student = Student.objects.get(id = student_id)
         course = Course.objects.get(id = course_id)
+        
+        student_attend = None
+        try:
+            student_attend = ClassAttend.objects.get(Q(course_id=course) & Q(student_id=student))
+        except:
+            student_attend = ClassAttend(course_id= course, student_id=student)
+            student_attend.save()
+        
 
-        student_attend = ClassAttend.objects.get(Q(course_id=course) & Q(student_id=student))
+
         print(student_attend)
         print(student_attend)
         if search_mode == "True" :
