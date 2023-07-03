@@ -304,3 +304,32 @@ def attendance_course_board(request, pk):
 
     return render(request, 'attendance_board/attendance_course_board.html', context)
 
+# 출석부에서 출결 변경시 처리
+def student_attendance_update(request):
+    if request.method == 'POST':
+        # 폼으로 전송된 데이터 가져오기
+        search_mode = request.POST.get('search_mode')
+        print(search_mode)
+        student_id = request.POST.get('student_id')
+        print(student_id)
+        course_id = request.POST.get('course_id')
+        print(course_id)
+        
+        student = Student.objects.get(id = student_id)
+        course = Course.objects.get(id = course_id)
+
+        student_attend = ClassAttend.objects.get(Q(course_id=course) & Q(student_id=student))
+        print(student_attend)
+        print(student_attend)
+        if search_mode == "True" :
+            student_attend.attend_state = True
+            student_attend.save()
+        elif search_mode == "False" :
+            student_attend.attend_state = False
+            student_attend.save()
+                
+
+        return redirect("course:attendance_course_board", pk=course.pk)
+    
+    student_class_attend = ClassAttend.objects
+    #return redirect

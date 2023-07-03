@@ -25,4 +25,7 @@ urlpatterns = [
     path('attendance_check_in', views.attendance_check_in, name='attendance_check_in'),
     path('attendance_check_in_success/<int:pk>/', views.attendance_check_in_success, name='attendance_check_in_success'),
     path('attendance_check_out', views.attendance_check_out, name='attendance_check_out'),
+    
+    path('student_attendance_update', views.student_attendance_update, name='student_attendance_update'),
+
 ]
