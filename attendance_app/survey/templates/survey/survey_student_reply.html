@@ -1,37 +1,78 @@
-<p>{{ student.name }} 님 {{ student_course.course_name }}에 대한 강의 평가를 해주세요</p>
-<p>* 강의평가는 필수로 제출하셔야 정상 퇴실 처리 됩니다.</p>
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 
-<form method="POST" action="{% url 'survey:survey_student_submit' %}">
-    {% csrf_token %}
-
-
-    <input type="hidden" name="student_id" value="{{ student.id }}">
-    <input type="hidden" name="survey_id" value="{{ course_survey.id }}">
-
-    <br>
-    {% if course_survey.question1 != None %}
-    {{ course_survey.question1 }}
-    <!-- reply3 -->
-    <br>
-    <input type="text" name="reply1" id="reply1" minlength="5" required>
-    <br><br>
-    {% endif %}
-
-    {% if course_survey.question2 != None %}
-    {{ course_survey.question2 }}
-    <!-- reply2 -->
-    <br>
-    <input type="text" name="reply2" id="reply2" minlength="5" required>
-    <br><br>
-    {% endif %}
-
-    {% if course_survey.question3 != None %}
-    {{ course_survey.question3 }}
-    <!-- reply3 -->
-    <br>
-    <input type="text" name="reply3" id="reply3" minlength="5" required>
-    <br><br>
-    {% endif %}
-
-    <button type="submit">제출</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <h2>
+            {{ student.name }} 님 {{ student_course.course_name }}에 대한 강의 평가를 해주세요
+        </h2>
+        
+        
+        <h3 style="color: red">
+            <b>
+                * 강의평가는 필수로 제출하셔야 정상 퇴실 처리 됩니다.
+            </b>
+    
+        </h3>
+        <hr>
+        <form method="POST" action="{% url 'survey:survey_student_submit' %}">
+            {% csrf_token %}
+            
+            <input type="hidden" name="student_id" value="{{ student.id }}">
+            <input type="hidden" name="survey_id" value="{{ course_survey.id }}">
+            
+            <br>
+            {% if course_survey.question1 != None %}
+            <p style="font-size: 25px;">
+                <b>
+                    {{ course_survey.question1 }}
+                </b>
+                    
+            </p>
+            <!-- reply1 -->
+            <textarea placeholder="질문1 문항 입력해주세요" name="reply1" id="reply1" rows="5" style="width: 100%;" minlength="5" required></textarea>
+            <br><br>
+            {% endif %}
+            
+            {% if course_survey.question2 != None %}
+            <p style="font-size: 25px;">
+                <b>
+                    {{ course_survey.question2 }}
+                </b>
+                
+            </p>
+            <!-- reply2 -->
+            <textarea placeholder="질문2 문항 입력해주세요" name="reply2" id="reply2" rows="5" style="width: 100%;" minlength="5" required></textarea>
+            <br><br>
+            {% endif %}
+            
+            {% if course_survey.question3 != None %}
+            <p style="font-size: 25px;">
+                <b>
+                    {{ course_survey.question3 }}
+                </b>
+                
+            </p>
+            <!-- reply3 -->
+            <textarea placeholder="질문3 문항 입력해주세요" name="reply3" id="reply3" rows="5" style="width: 100%;" minlength="5" required></textarea>
+            <br><br>
+            {% endif %}
+            
+            <button class="btn btn-primary" type="submit">제출</button>
+        </form>
+        
+        
+        
+    </div>
+    
+    
+</body>
+</html>

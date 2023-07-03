@@ -73,6 +73,14 @@
 </head>
 <body>
   <h1>전자출결 (출입용)</h1>
+
+  <h3>
+    <a href="{% url 'course:course_detail' course.pk %}">
+      강의 목록으로
+    </a>
+  </h3>
+
+  
   <p>과목 명 : {{course.course_name}} &nbsp;&nbsp;&nbsp; 강사 : {{course.teacher_name}} </p>
   <p>수업 일시 : {{course.start_date}}</p>
   <p>수업 시작 : {{course.start_at}} </p>

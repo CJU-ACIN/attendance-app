@@ -94,7 +94,9 @@ def survey_reply_detail(request, pk):
     
     return render(request, 'survey/survey_reply_detail.html', context)
 
+
 # 학생 설문 페이지
+@login_required
 def survey_student_reply(request, pk) :
     # 해당 수강생이 현재 과목을 듣고 있는지 확인
     # 해당 학생과 surveyReply를 이어주기 위해
@@ -108,10 +110,14 @@ def survey_student_reply(request, pk) :
         'student_course' : student_course,
         'course_survey' : course_survey,
         'student' : student,
+        
     }
+
     return render(request, 'survey/survey_student_reply.html', context)
 
+
 # 학생 설문 제출 처리
+@login_required
 def survey_student_submit(request):
 
     if request.method == 'POST':
