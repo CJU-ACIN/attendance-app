@@ -11,8 +11,10 @@
 </head>
 <body>
     <div class="container">
+        <a class="btn btn-secondary" href="{% url 'home:home' %}" role="button">메인 페이지로</a>
         <h2>
-            {{ student.name }} 님 {{ student_course.course_name }}에 대한 강의 평가를 해주세요
+            <b>{{ student.name }}</b> 님 <br>
+            <b>{{ student_course.course_name }}</b>에 대한 강의 평가를 해주세요
         </h2>
         
         

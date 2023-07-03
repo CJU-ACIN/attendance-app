@@ -253,3 +253,21 @@ def student_attendance_detail(request):
     }
 
     return render(request, 'user/student/student_attendance_detail.html', context)
+
+
+
+@login_required
+def delete_student(request):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        user = authenticate(username=request.user.username, password=password)
+        if user is not None:
+            # 비밀번호가 맞는 경우 회원 삭제
+            user.delete()
+            return redirect('home')  # 회원탈퇴 후 리다이렉션할 URL
+        else:
+            # 비밀번호가 틀린 경우 에러 메시지 출력
+            error_message = '비밀번호가 올바르지 않습니다.'
+            return render(request, 'user/student/delete_student.html', {'error_message': error_message})
+    else:
+        return render(request, 'user/student/delete_student.html')
