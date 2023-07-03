@@ -43,14 +43,14 @@
                         <td>
                             {% for class_attend in class_attends %}
                               {% if class_attend.student_id_id == student.id %}
-                                {% if class_attend.end_at|time:"H:i:s" == '00:00:00'%}
+                                {% if class_attend.start_at|time:"H:i:s" == '00:00:00'%}
                                   없음
 
                                 {% else %}
-                                  {{ class_attend.end_at|time:"H:i:s" }}
-                              
-                                {% endif%}
-
+                                  {{ class_attend.start_at|time:"H:i:s" }}
+                                {% endif %}
+                              {% else %}
+                                NULL있음
                               {% endif %}
                             {% endfor %}
                         </td>
@@ -75,7 +75,18 @@
                         <td>
                             {% for class_attend in class_attends %}
                               {% if class_attend.student_id.pk == student.id %}
-                                {{ class_attend.attend_state }}
+                                {% if class_attend.attend_state == 1%}
+                                <b style="color: green;">
+                                  O
+                                </b>  
+                        
+                                {% endif %}
+                                {% if class_attend.attend_state  == 0%}
+                                <b style="color: red;">
+                                  X
+                                </b>  
+                                  
+                                {% endif %}
                               {% endif %}
                             {% endfor %}
                         </td>
