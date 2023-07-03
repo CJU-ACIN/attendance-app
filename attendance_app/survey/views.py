@@ -113,6 +113,9 @@ def survey_student_reply(request, pk) :
         
     }
 
+    print(f'{course_survey.question1 = }')
+    print(f'{course_survey.question2 = }')
+    print(f'{course_survey.question3 = }')
     return render(request, 'survey/survey_student_reply.html', context)
 
 
