@@ -1,0 +1,118 @@
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ course.name }} 출석 현황</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  {% include 'home/navbar.html' %}
+  <br><br><br>
+    <div class="container">
+        <br><br>
+      
+        <h1><b>출석 -- {{ course.course_name }} -- 출석 현황</b></h1>
+
+        <br>
+        <br><br>
+
+        <table class="table table-striped">
+            <!--  -->
+            <thead>
+              <tr>
+                <th scope="col">이름</th>
+                <th scope="col">입실 시간</th>
+                <th scope="col">퇴실 시간</th>
+                <th scope="col">출석 인정</th>
+                <th scope="col">출석 변경</th>
+              </tr>
+            </thead>
+            
+            <!-- 학생 전체 정보 -->
+            {% for student in students %}
+                <tbody>
+                    <tr>
+                        <!-- 학생 이름 -->
+                        <td> {{ student.name }} </td>
+
+                        <!-- 입실 시간 -->
+                        <td>
+                            {% for class_attend in class_attends %}
+                              {% if class_attend.student_id_id == student.id %}
+                                {% if class_attend.end_at|time:"H:i:s" == '00:00:00'%}
+                                  없음
+
+                                {% else %}
+                                  {{ class_attend.end_at|time:"H:i:s" }}
+                              
+                                {% endif%}
+
+                              {% endif %}
+                            {% endfor %}
+                        </td>
+
+                        <!-- 퇴실 시간 -->
+                        <td>
+                            {% for class_attend in class_attends %}
+                              {% if class_attend.student_id.pk == student.id %}
+                                  {% if class_attend.end_at|time:"H:i:s" == '00:00:00'%}
+                                  없음
+
+                                  {% else %}
+                                    {{ class_attend.end_at|time:"H:i:s" }}
+                                    
+                                  {% endif%}
+                                  
+                              {% endif %}
+                            {% endfor %}
+                        </td>
+
+                        <!-- 출석 인정 상태 -->
+                        <td>
+                            {% for class_attend in class_attends %}
+                              {% if class_attend.student_id.pk == student.id %}
+                                {{ class_attend.attend_state }}
+                              {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                          
+                          <form action="{% url 'course:student_attendance_update' %}" method="post" id="search_mode">
+                            {% csrf_token %}
+                            <div class="container my-3">
+                              <select name="search_mode" id="search_mode">
+                                <option value="">출결수정</option>
+                                <option value="False">X</option>
+                                <option value="True">O</option>
+                              </select>
+                            </div>
+                            <input type="hidden" name="student_id" value="{{ student.id }}">
+                            <input type="hidden" name="course_id" value="{{ course.id }}">
+                          </form>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            {% endfor %}
+            
+          </table>
+
+    
+
+
+  </div>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("#search_mode").change(function() {
+        $("#search_mode").closest("form").attr("method", "post").submit();
+      });
+    });
+  </script>
+</body>
+
+</html>

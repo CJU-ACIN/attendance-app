@@ -285,3 +285,82 @@ def delete_course(request, pk):
     
     context = {'course': course}
     return render(request, 'course/delete_course.html', context)
+
+
+# 출석 분반 선택
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
+def attendance_divison_list(request):
+    division = Division.objects.all()
+
+    context = {
+        'division': division
+    }
+
+    return render(request, 'attendance_board/attendance_division_list.html', context)
+
+
+# 출석 강의 선택
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
+def attendance_course_list(request, pk):
+    # pk -> division_id
+    course = Course.objects.filter(division_name_id=pk)
+
+    context = {
+        'course': course
+    }
+
+    return render(request, 'attendance_board/attendance_course_list.html', context)
+
+
+# 강의별 출석 명단
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
+def attendance_course_board(request, pk):
+    # pk -> course_id
+    course = Course.objects.get(pk=pk)
+
+    division = Division.objects.get(pk=course.division_name_id)
+    
+    students = Student.objects.filter(division_id=division.pk)
+    class_attends = ClassAttend.objects.filter(student_id__division_id=division.pk)
+
+    print(f'{class_attends = }')
+
+    context = {
+        'course': course,
+        'class_attends': class_attends,
+        'students': students,
+        'division': division,
+        
+    }
+
+    return render(request, 'attendance_board/attendance_course_board.html', context)
+
+# 출석부에서 출결 변경시 처리
+def student_attendance_update(request):
+    if request.method == 'POST':
+        # 폼으로 전송된 데이터 가져오기
+        search_mode = request.POST.get('search_mode')
+        print(search_mode)
+        student_id = request.POST.get('student_id')
+        print(student_id)
+        course_id = request.POST.get('course_id')
+        print(course_id)
+        
+        student = Student.objects.get(id = student_id)
+        course = Course.objects.get(id = course_id)
+
+        student_attend = ClassAttend.objects.get(Q(course_id=course) & Q(student_id=student))
+        print(student_attend)
+        print(student_attend)
+        if search_mode == "True" :
+            student_attend.attend_state = True
+            student_attend.save()
+        elif search_mode == "False" :
+            student_attend.attend_state = False
+            student_attend.save()
+                
+
+        return redirect("course:attendance_course_board", pk=course.pk)
+    
+    student_class_attend = ClassAttend.objects
+    #return redirect

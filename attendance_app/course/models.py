@@ -23,7 +23,9 @@ class Course(models.Model):
 class ClassAttend(models.Model):
     course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
     student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
-    start_at = models.TimeField()
+    start_at = models.TimeField(default=time(0, 0))
     end_at = models.TimeField(default=time(0, 0))
     attend_state = models.BooleanField(default=False) # 출결 확인
 
+    def __str__(self):
+        return f'[{self.course_id.course_name} 출석] {self.student_id.name}'
