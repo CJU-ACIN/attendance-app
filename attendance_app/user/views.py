@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from user.models import Student, Division
+from course.models import ClassAttend, Course
 
 from django.contrib.auth import login, authenticate
 
@@ -114,11 +115,12 @@ def signup(request):
 def student_detail(request):
     user = User.objects.get(pk=request.user.pk)
     student = Student.objects.get(user_id=request.user.pk)
-    
+    division = Division.objects.get(pk=student.division_id)
     
     context = {
         'user': user,
         'student': student,
+        'division': division,
     }
 
     return render(request, 'user/student/student_detail.html', context)
@@ -232,3 +234,22 @@ def delete_division(request, division_id):
     return render(request, 'user/admin/admin_delete_division.html', {'division': division})
 
 
+# 학생 출석 정보
+@login_required
+def student_attendance_detail(request):
+    student = request.user.student
+    division = Division.objects.get(pk=student.division_id)
+    course = Course.objects.filter(division_name_id=student.division_id)
+    class_attend = ClassAttend.objects.filter(student_id_id=student.pk)
+    
+
+
+    context ={
+        'student': student,
+        'division': division,
+        'course': course,
+        'class_attend': class_attend,
+
+    }
+
+    return render(request, 'user/student/student_attendance_detail.html', context)

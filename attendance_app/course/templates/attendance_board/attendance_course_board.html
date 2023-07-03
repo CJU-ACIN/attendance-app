@@ -43,11 +43,11 @@
                         <td>
                             {% for class_attend in class_attends %}
                               {% if class_attend.student_id_id == student.id %}
-                                {% if class_attend.end_at|time:"H:i:s" == '00:00:00'%}
+                                {% if class_attend.start_at|time:"H:i:s" == '00:00:00'%}
                                   없음
 
                                 {% else %}
-                                  {{ class_attend.end_at|time:"H:i:s" }}
+                                  {{ class_attend.start_at|time:"H:i:s" }}
                               
                                 {% endif%}
 

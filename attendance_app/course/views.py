@@ -138,7 +138,7 @@ def attendance_check_in_success(request, pk):
     # 현재 듣고있는 강의 필드에 추가
     student.current_course_name = course.course_name
     student.save()
-    
+
     context =  {
         'classAttend': classAttend, 
         'course': course, 
@@ -336,6 +336,7 @@ def attendance_course_board(request, pk):
     return render(request, 'attendance_board/attendance_course_board.html', context)
 
 # 출석부에서 출결 변경시 처리
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def student_attendance_update(request):
     if request.method == 'POST':
         # 폼으로 전송된 데이터 가져오기

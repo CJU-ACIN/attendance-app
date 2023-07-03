@@ -1,0 +1,75 @@
+{% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+  
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>내 정보</title>
+</head>
+<body>
+    {% include 'home/navbar.html' %}
+    <br><br><br>
+    <div class="container">
+      <a class="btn btn-secondary" href="{% url 'home:home' %}" role="button">메인 페이지로</a>
+
+      <br><br>
+
+      <h1><b>내 출석</b></h1>
+
+      <br><br>
+      분반: <b>{{ division }}</b>
+      <br><hr><br>
+
+      <table class="table table-striped">
+        <thead>
+            <tr>
+              <th scope="col">강의 이름</th>
+              <th scope="col">출석 여부</th>
+
+            </tr>
+          </thead>
+
+          {% for c in course %}
+          <tbody>
+            <tr>
+                <!-- 강의 이름 -->
+                <td>{{ c.course_name }}</td>
+                
+                <td>
+                <!-- 출석 여부 확인 -->
+                {% for ca in class_attend%}
+                    {% if c.pk == ca.course_id_id %}
+                        {% if ca.attend_state == 1 %}
+                            <b style="color: green;">
+                                O
+                            </b>
+                        
+                        {% else %}
+                            <b>
+                                X
+                            </b>
+
+                        {% endif %}
+                    {% endif %}
+
+                {% endfor %}
+                </td>
+            </tr>
+
+          </tbody>
+          {% endfor %}
+      </table>
+      
+      <br><br><br><br><hr><br>
+
+      <a class="btn btn-danger" href="#" role="button">회원 탈퇴</a>
+
+  </div>
+</body>
+</html>
