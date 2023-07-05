@@ -19,13 +19,10 @@
       상세 페이지
       <h1><b>{{ course.course_name }}</b></h1>
     
-      <br><br>
-      <a class="btn btn-info" href="#" role="button">질문 내용 수정</a>
-    
-      <br><br>
-      
+      <br>
+        <hr>
         <!-- 대충 기본 정보 -->
-        <h4> 질문 내용 </h4>
+        <h4> 강의평가 질문 내용 </h4>
         <!-- 질문 1번 -->
         {% if survey.question1 %}
             [1번 문항] {{ survey.question1 }}
@@ -60,23 +57,21 @@
         {% endif %}
 
         
-        <br><br>
+        <br>
 
         <hr>
 
-        <br><br>
-        클릭해서 설문 답변을 보세요.
-
-        <br><br>
-
+        <br>
         <div class="list-group">
+          <h4> 답변 내용 </h4>
+          <p>클릭해서 설문 답변을 보세요.</p>
             {% for sr in survey_reply %}
               <a href="{% url 'survey:survey_reply_detail' sr.pk %}" class="list-group-item list-group-item-action">
                 {{ sr }}
               </a>
             {% endfor %}
         </div>
-
+        <hr>
   </div>
 
 

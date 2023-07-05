@@ -17,7 +17,6 @@ from datetime import datetime
 # QR코드 스캐너 & 스캔후 데이터 받아서 출결 찍기
 def QRScanner_in(request, pk):
     course = get_object_or_404(Course, pk=pk)
-    qr_error = False    # 유효한 QR인지 확인
 
     if request.method == 'POST' and  'data' in request.POST and request.POST.get('data') != "":
         qr_data = request.POST.get('data')
@@ -43,23 +42,22 @@ def QRScanner_in(request, pk):
             return render(request, 'attendance/attendance_check.html', context)
         except Student.DoesNotExist:
             print("유효한 QR코드가 입력값으로 들어오지 않았습니다.")
-            qr_error = True # qr 에러 처리
             context = {
                 'course' : course,
-                'qr_error'  : qr_error, 
+                'qr_error' : True,
+                'error_message' : "유효한 QR코드가 아닙니다. 등록된 QR코드를 보여주세요"
             }
             return render(request, 'attendance/QRScanner_in.html', context)
-    context = {
-        'course' : course,
-        'qr_error'  : qr_error,
-    }
-
-    return render(request, 'attendance/QRScanner_in.html', context)
+        
+    else :
+        context = {
+            'course' : course,
+        }
+        return render(request, 'attendance/QRScanner_in.html', context)
 
 
 def QRScanner_out(request, pk):
     course = get_object_or_404(Course, pk=pk)
-    qr_error = False    # 유효한 QR인지 확인
 
     if request.method == 'POST' and  'data' in request.POST and request.POST.get('data') != "":
         qr_data = request.POST.get('data')
@@ -85,18 +83,19 @@ def QRScanner_out(request, pk):
             return render(request, 'attendance/attendance_check.html', context)
         except Student.DoesNotExist:
             print("유효한 QR코드가 입력값으로 들어오지 않았습니다.")
-            qr_error = True # qr 에러 처리
             context = {
                 'course' : course,
-                'qr_error'  : qr_error,
+                'qr_error' : True,
+                'error_message' : "유효한 QR코드가 아닙니다. 등록된 QR코드를 보여주세요"
             }
             return render(request, 'attendance/QRScanner_out.html', context)
-    context = {
-        'course' : course,
-        'qr_error'  : qr_error,
-    }
+        
+    else :
+        context = {
+            'course' : course,
+        }
 
-    return render(request, 'attendance/QRScanner_out.html', context)
+        return render(request, 'attendance/QRScanner_out.html', context)
 
 ### 입실,퇴실 체크 모듈에 데이터 넣기
 
@@ -106,7 +105,7 @@ def attendance_check_in(request):
         print("post입력 확인")
         form = ClassAttendInForm(request.POST)
         class_attend = form.save(commit=False)
-        # 데이터 조회
+        #  출석 데이터 조회
         attend_data = ClassAttend.objects.filter(Q(course_id=class_attend.course_id) & Q(student_id=class_attend.student_id))
         
         if len(attend_data) == 0:
@@ -121,11 +120,15 @@ def attendance_check_in(request):
                 return render(request, 'attendance/attendance_error.html', {'form': form})
         else :
             # 데이터가 1개 이상인 경우 (출입을 이미 한 경우)
-            form = ClassAttendInForm(request.POST)
             course = class_attend.course_id
             student = class_attend.student_id
-            context = {'course': course, 'student': student}
-            return render(request, 'attendance/attendance_already_in.html', context)
+            error_message = student.name + "님 이미 입실등록을 하셧습니다."
+            context = {
+                'course': course, 
+                'error_message': error_message,
+                'qr_error' : True,
+            }
+            return render(request, 'attendance/QRScanner_in.html', context)
     else:
         return render(request, 'attendance/attendance_error.html')
 
@@ -157,10 +160,22 @@ def attendance_check_out(request):
         parsed_time = datetime.strptime(time_string, "%Y-%m-%d %H:%M")
         formatted_time = parsed_time.strftime("%H:%M")
         print(formatted_time)
+        
 
-        classAttend = ClassAttend.objects.get(Q(course_id=course_id) & Q(student_id=student_id))
-        print(classAttend)
-
+        # 지각을해서 입실처리는 하지않고, 퇴실처리만 시도한 경우
+        try : 
+            classAttend = ClassAttend.objects.get(Q(course_id=course_id) & Q(student_id=student_id))
+            print(classAttend)
+        except :
+            student = Student.objects.get(id = student_id)
+            error_message = student.name + "님 입실 처리를 하셔야 퇴실 처리를 하실수 있습니다!! (지각시 관리자에게 수동 출석을 요청하세요)"
+            context = {
+                'course' : Course.objects.get(id = course_id),
+                'error_message' : error_message,
+                'qr_error' : True,
+            }
+            return render(request, 'attendance/QRScanner_out.html', context)            
+        
         # 설문지 제출했는지 확인
         # survey_reply = SurveyReply.objects.get(Q(course_id=course_id) & Q(student_id=student_id))
         # if survey_reply.submit_survey !=True:
@@ -171,16 +186,41 @@ def attendance_check_out(request):
         survey = Survey.objects.get(course_id=classAttend.course_id)
         try :
             survey_reply = SurveyReply.objects.get(student_id=classAttend.student_id, survey_id=survey)
-            # 2차 검증
+            # 2차 검증 (강의평가를 제출하지 않았으면)
             if survey_reply.submit_survey == False:
-                return render(request, 'attendance/attendance_submit_error.html', {'student' : classAttend.student_id, "course" : classAttend.course_id})
+                course = classAttend.course_id
+                student = classAttend.student_id
+                error_message = student.name + "님 강의평가를 제출하지 않으셔서 퇴실처리 되지않았습니다. (강의평가 제출 후 퇴실처리 바랍니다.)"
+                context = {
+                    'course' : course,
+                    'error_message' : error_message,
+                    'qr_error' : True,
+                }
+                return render(request, 'attendance/QRScanner_out.html', context)            
+            
         except SurveyReply.DoesNotExist : 
             # 강의평가를 제출하지 않았으면 
-            return render(request, 'attendance/attendance_submit_error.html', {'student' : classAttend.student_id, "course" : classAttend.course_id})            
+            course = classAttend.course_id
+            student = classAttend.student_id
+            error_message = student.name + "님 강의평가를 제출하지 않으셔서 퇴실처리 되지않았습니다. (강의평가 제출 후 퇴실처리 바랍니다.)"
+            context = {
+                'course' : course,
+                'error_message' : error_message,
+                'qr_error' : True,
+            }
+            return render(request, 'attendance/QRScanner_out.html', context)            
         
         # classAttend.attend_state(퇴실 처리를 이미 했으면)
         if classAttend.attend_state == True :
-            return render(request,'attendance/attendance_already_out.html', {'student' : classAttend.student_id, "course" : classAttend.course_id})
+            course = classAttend.course_id
+            student = classAttend.student_id
+            error_message = student.name + "님 이미 정상 퇴실처리 되셧습니다."
+            context = {
+                'course' : course,
+                'error_message' : error_message,
+                'qr_error' : True,
+            }
+            return render(request, 'attendance/QRScanner_out.html', context)            
         
         
         classAttend.end_at = formatted_time

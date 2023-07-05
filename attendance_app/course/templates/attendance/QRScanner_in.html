@@ -1,4 +1,7 @@
 {% load static %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 <html>
 <head>
   <meta charset="utf-8">
@@ -73,25 +76,24 @@
 </head>
 <body>
   <h1>전자출결 (출입용)</h1>
-
-  <h3>
-    <a href="{% url 'course:course_detail' course.pk %}">
-      강의 목록으로
-    </a>
-  </h3>
-
+  <hr>
   
   <p>과목 명 : {{course.course_name}} &nbsp;&nbsp;&nbsp; 강사 : {{course.teacher_name}} </p>
   <p>수업 일시 : {{course.start_date}}</p>
-  <p>수업 시작 : {{course.start_at}} </p>
+  <p>수업 시작 : {{course.start_at}}  &nbsp;&nbsp;&nbsp; || &nbsp;&nbsp;&nbsp;  수업 종료 : {{course.end_at}}</p>
   <p>수업 시간 : {{course.hours}} 시간</p>
 
   <!-- 유효하지 않은 QR코드를 제시했을시에 뜨는 알림창-->
   <div class="notification-container" id="notification-container">
-    <p>유효한 QR코드가 아닙니다. 등록된 QR코드가 맞는지 확인해 주세요.</p>
+    <p id="notification-message">{{ error_message }}</p>
   </div>
 
   <p>학생 QR코드를 카메라에 보여주세요.</p>
+  <h3>
+    <a class="btn btn-warning" href="{% url 'course:course_detail' course.pk %}">
+      강의 목록으로
+    </a>
+  </h3>
   <div id="loadingMessage">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
   <canvas id="canvas" hidden></canvas>
   <div id="output" hidden>
