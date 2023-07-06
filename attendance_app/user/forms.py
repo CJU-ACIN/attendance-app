@@ -29,6 +29,7 @@ class SignUpForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].help_text = ''  # 도움말 텍스트 비움
+        
 
     def clean(self):
         cleaned_data = super().clean()
@@ -39,6 +40,8 @@ class SignUpForm(forms.ModelForm):
             self.add_error('password2', '비밀번호와 비밀번호 확인이 일치하지 않습니다.')
 
         return cleaned_data
+    
+
 
 
 class ClientForm(forms.ModelForm):

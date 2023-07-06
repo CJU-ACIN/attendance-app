@@ -37,11 +37,23 @@
 </head>
 <body>
     {% include 'home/navbar.html' %}
-    <ul class="messages">
+
+    <div class="container">
+
+    <!-- 오류 메시지 처리 ex) 비밀번호 오류 등 -->
+    {% if messages %}
       {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        <div class="alert alert-warning" role="alert" style="text-align: center;">
+          <b>비밀번호는 다음을 만족해야합니다.</b> <br>
+          <hr>
+          <i>최소 8자 이상</i> <br>
+          <i>영어, 숫자, 특수문자의 조합</i> <br>
+          <i>aaa, abc123과 같은 단순한 글자 조합이 아니여야함.</i> <br>
+        </div>
       {% endfor %}
-    </ul>
+    {% endif %}
+
+
     <div class="row justify-content-center mt-5">
         <div class="col-md-6">
           <div class="card">
@@ -65,5 +77,6 @@
           </div>
         </div>
     </div>
+  </div>
 </body>
 </html>
