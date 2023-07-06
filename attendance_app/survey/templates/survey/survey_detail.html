@@ -64,12 +64,24 @@
         <br>
         <div class="list-group">
           <h4> 답변 내용 </h4>
-          <p>클릭해서 설문 답변을 보세요.</p>
+          <p>클릭해서 설문 답변을 확인해보세요.</p>
+          <br>
+
+          <!-- 작성된 설문이 있을 경우 -->
+          {% if survey_reply %}
+
             {% for sr in survey_reply %}
               <a href="{% url 'survey:survey_reply_detail' sr.pk %}" class="list-group-item list-group-item-action">
                 {{ sr }}
               </a>
             {% endfor %}
+          
+          <!--  작성된 설문이 없을 경우 -->
+          {% else %}
+              <i style="color: blue">
+                아직 작성된 설문이 없습니다!
+              </i>
+          {% endif %}
         </div>
         <hr>
   </div>
