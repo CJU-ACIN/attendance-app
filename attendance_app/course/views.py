@@ -11,7 +11,7 @@ from django.db.models import Q
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 
-from datetime import datetime
+from datetime import datetime, timedelta
 # Create your views here.
 
 # QR코드 스캐너 & 스캔후 데이터 받아서 출결 찍기
@@ -111,6 +111,7 @@ def attendance_check_in(request):
         if len(attend_data) == 0:
             # 데이터가 0개인 경우
             if form.is_valid():
+                # 정상 입실 확인 / ClassAttend 객체 생성
                 print("form 유효성 성공")
                 classAttend = form.save()
                 return redirect('course:attendance_check_in_success', pk=classAttend.pk)  # 식별자(pk)를 URL에 포함시켜 리디렉션
@@ -134,7 +135,22 @@ def attendance_check_in(request):
 
 # 출석 성공 페이지
 def attendance_check_in_success(request, pk):
+
     classAttend = ClassAttend.objects.get(pk=pk)  # 식별자(pk)를 사용하여 클래스 인스턴스 조회
+
+    # 시간값 비교를 위한 datetime 객체로 변환. 시간값만 비교
+    course_late_at = datetime.combine(datetime.min,classAttend.course_id.start_at) + timedelta(minutes=15)
+    print(course_late_at)
+    student_start_at = datetime.combine(datetime.min,classAttend.start_at)
+    print(student_start_at)
+
+    # 시작시간보다 15분 뒤에 입실을 할시 (지각 처리)
+    if student_start_at > course_late_at :
+        late_check = False
+    # 시작 시간 15분 이내에 입실을 할시 (정상 출석)
+    else :
+        late_check = True
+
     course = classAttend.course_id
     student = classAttend.student_id
 
@@ -145,7 +161,8 @@ def attendance_check_in_success(request, pk):
     context =  {
         'classAttend': classAttend, 
         'course': course, 
-        'student': student
+        'student': student,
+        'late_check' : late_check,
     }
     return render(request, 'attendance/attendance_check_in_success.html', context)
 
@@ -211,7 +228,7 @@ def attendance_check_out(request):
             return render(request, 'attendance/QRScanner_out.html', context)            
         
         # classAttend.attend_state(퇴실 처리를 이미 했으면)
-        if classAttend.attend_state == True :
+        if classAttend.attend_state == 2:
             course = classAttend.course_id
             student = classAttend.student_id
             error_message = student.name + "님 이미 정상 퇴실처리 되셧습니다."
@@ -222,11 +239,26 @@ def attendance_check_out(request):
             }
             return render(request, 'attendance/QRScanner_out.html', context)            
         
-        
-        classAttend.end_at = formatted_time
-        classAttend.attend_state = True
-        classAttend.save()
-        
+
+        ### 정상 퇴실 처리 부분 
+
+        # 시간값 비교를 위한 datetime 객체로 변환. 시간값만 비교
+        course_late_at = datetime.combine(datetime.min,classAttend.course_id.start_at) + timedelta(minutes=15)
+        print(course_late_at)
+        student_start_at = datetime.combine(datetime.min,classAttend.start_at)
+        print(student_start_at)
+
+        # 시작시간보다 15분 뒤에 입실을 할시 (지각 처리)
+        if student_start_at > course_late_at :
+            classAttend.end_at = formatted_time
+            classAttend.attend_state = 1 # 지각 출석
+            classAttend.save()
+        # 시작 시간 15분 이내에 입실을 할시 (정상 출석)
+        else :
+            classAttend.end_at = formatted_time
+            classAttend.attend_state = 2 # 정상 출석
+            classAttend.save()
+            
         course = classAttend.course_id
         student = classAttend.student_id
 
@@ -321,7 +353,7 @@ def delete_course(request, pk):
     course = get_object_or_404(Course, pk=pk)
     if request.method == 'POST':
         course.delete()
-        return redirect('course:course_list')  # Replace 'home' with the appropriate URL name
+        return redirect('course:course_list', pk=course.pk)  # Replace 'home' with the appropriate URL name
     
     context = {'course': course}
     return render(request, 'course/delete_course.html', context)
@@ -396,18 +428,29 @@ def student_attendance_update(request):
         except:
             student_attend = ClassAttend(course_id= course, student_id=student)
             student_attend.save()
-        
-
-
+    
         print(student_attend)
-        print(student_attend)
-        if search_mode == "True" :
-            student_attend.attend_state = True
+
+        # 2 출석, 1 지각, 0 결석, nftf_in 비대면 입실, nftf_out 비대면 퇴실
+        if search_mode == "2" :
+            student_attend.attend_state = 2
             student_attend.save()
-        elif search_mode == "False" :
-            student_attend.attend_state = False
+        elif search_mode =="1" :
+            student_attend.attend_state = 1
             student_attend.save()
-                
+        elif search_mode == "0" :
+            student_attend.attend_state = 0
+            student_attend.save()
+        elif search_mode == "nftf_in" :
+            parsed_time = datetime.now()
+            formatted_time = parsed_time.strftime("%H:%M")
+            student_attend.start_at = formatted_time
+            student_attend.save()
+        elif search_mode == "nftf_out" :
+            parsed_time = datetime.now()
+            formatted_time = parsed_time.strftime("%H:%M")
+            student_attend.end_at = formatted_time
+            student_attend.save()
 
         return redirect("course:attendance_course_board", pk=course.pk)
     

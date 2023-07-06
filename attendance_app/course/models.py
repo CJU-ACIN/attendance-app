@@ -25,7 +25,9 @@ class ClassAttend(models.Model):
     student_id = models.ForeignKey(Student, on_delete=models.CASCADE)
     start_at = models.TimeField(default=time(0, 0))
     end_at = models.TimeField(default=time(0, 0))
-    attend_state = models.BooleanField(default=False) # 출결 확인
+
+    attend_state = models.IntegerField(default=0)   # --> 2(출석) 1(지각) 0(결석)
+    # l(지각) 부분은 수업 정상 입실시간의 15분 뒤에 입실 시간이 찍히면(비교), 지각으로 처리
 
     def __str__(self):
         return f'[{self.course_id.course_name} 출석] {self.student_id.name}'

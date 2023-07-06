@@ -75,17 +75,18 @@
                         <td>
                             {% for class_attend in class_attends %}
                               {% if class_attend.student_id.pk == student.id %}
-                                {% if class_attend.attend_state == 1%}
+                                {% if class_attend.attend_state == 2%}
                                 <b style="color: green;">
                                   O
                                 </b>  
-                        
-                                {% endif %}
-                                {% if class_attend.attend_state  == 0%}
+                                {% elif class_attend.attend_state  == 1 %}
+                                <b style="color: orange;">
+                                  △
+                                </b>
+                                {% elif class_attend.attend_state  == 0 %}
                                 <b style="color: red;">
                                   X
-                                </b>  
-                                  
+                                </b>
                                 {% endif %}
                               {% endif %}
                             {% endfor %}
@@ -97,8 +98,11 @@
                             <div class="container my-3">
                               <select name="search_mode" id="search_mode" class="search-mode-select">
                                 <option value="">출결수정</option>
-                                <option value="False">X</option>
-                                <option value="True">O</option>
+                                <option value="2">O</option>
+                                <option value="1">△</option>
+                                <option value="0">X</option>
+                                <option value="nftf_in">비대면 입실</option>
+                                <option value="nftf_out">비대면 퇴실</option>
                               </select>
                             </div>
                             <input type="hidden" name="student_id" value="{{ student.id }}">

@@ -30,6 +30,8 @@
         <thead>
             <tr>
               <th scope="col">강의 이름</th>
+              <th scope="col">입실 시간</th>
+              <th scope="col">퇴실 시간</th>
               <th scope="col">출석 여부</th>
 
             </tr>
@@ -39,27 +41,42 @@
           <tbody>
             <tr>
                 <!-- 강의 이름 -->
-                <td>{{ c.course_name }}</td>
-                
-                <td>
+                <td>{{ c.course_name }}</td>                
                 <!-- 출석 여부 확인 -->
                 {% for ca in class_attend%}
                     {% if c.pk == ca.course_id_id %}
-                        {% if ca.attend_state == 1 %}
-                            <b style="color: green;">
-                                O
-                            </b>
-                        
-                        {% else %}
-                            <b>
-                                X
-                            </b>
-
+                    <td>
+                      {% if ca.start_at|time:"H:i:s" == '00:00:00'%}
+                      없음
+                      {% else %}
+                      {{ca.start_at}}
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if ca.end_at|time:"H:i:s" == '00:00:00'%}
+                      없음
+                      {% else %}
+                      {{ca.start_at}}
+                      {% endif %}
+                    </td>
+                    <td>
+                        {% if ca.attend_state == 2%}
+                        <b style="color: green;">
+                          O
+                        </b>  
+                        {% elif ca.attend_state  == 1 %}
+                        <b style="color: orange;">
+                          △
+                        </b>
+                        {% elif ca.attend_state  == 0 %}
+                        <b style="color: red;">
+                          X
+                        </b>
                         {% endif %}
+                    </td>
                     {% endif %}
 
                 {% endfor %}
-                </td>
             </tr>
 
           </tbody>

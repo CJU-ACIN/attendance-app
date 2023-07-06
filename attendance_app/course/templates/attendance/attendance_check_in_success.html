@@ -4,8 +4,15 @@
 </head>
 <body>
 <div>{{student.name}}님</div>
-<div>정상 입실 처리 되었습니다.</div>
-<div>출입 시간 :{{classAttend.start_at}}</div>
+{% if late_check == True %}
+<p style="color: green;">정상 입실 </p>
+<div>처리 되었습니다.</div>
+<div>출입 시간 : {{classAttend.start_at}}</div>
+{% else %}
+<p style="color: red;">지각 입실 </p>
+<div>처리 되었습니다.</div>
+<div>출입 시간 : {{classAttend.start_at}}</div>
+{% endif %}
 <div id="timer"></div>
 
 </body>
