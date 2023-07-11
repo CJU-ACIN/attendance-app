@@ -1,3 +1,5 @@
+import os
+
 from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 
 from course.forms import CourseForm, ClassAttendInForm
@@ -11,7 +13,17 @@ from django.db.models import Q
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 
+# 엑셀 다운로드
+import openpyxl
+from openpyxl.utils import get_column_letter
+from django.http import FileResponse
+from django.conf import settings
+
 from datetime import datetime, timedelta
+from django.http import HttpResponse
+
+
+
 # Create your views here.
 
 # QR코드 스캐너 & 스캔후 데이터 받아서 출결 찍기
@@ -456,3 +468,100 @@ def student_attendance_update(request):
     
     student_class_attend = ClassAttend.objects
     #return redirect
+    
+    
+    
+# 강의 출석현황 xlsx 다운로드
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
+def download_attendance(request, pk):
+    # pk -> course_id
+    
+    # 중간 query
+    course = Course.objects.get(pk=pk)
+    division = Division.objects.get(pk=course.division_name_id)
+    
+    students = Student.objects.filter(division_id=division.pk)
+    class_attends = ClassAttend.objects.filter(Q(student_id__division_id=division.pk) & Q(course_id_id=course))  
+    
+    
+    # 파일로 만들어 줄 최종 query
+    
+    
+    print(f'{students = }')
+    
+    data = [['학생 이름', '입실시간', '퇴실시간', '출석 인정', '분반 이름', '강의 이름']]
+    for student in students:
+        row = [student.name]  # 필요한 필드 값을 추출하여 리스트로 저장합니다.
+        
+        print(student.name)
+        for class_attend in class_attends:
+            print(f'{class_attend.attend_state = }')
+            print(f'{class_attend.student_id_id = }')
+            print(f'{student.id = }')
+            # 입실/퇴실 기록이 있는 경우
+            if class_attend.student_id_id == student.id and class_attend.start_at != '00:00:00' and class_attend.end_at != '00:00:00':
+                row.append(class_attend.start_at)
+                row.append(class_attend.end_at)
+                
+                
+                # 출석 인정 상태 표기
+                if class_attend.attend_state == 0:
+                    row.append('결석')
+                    
+                elif class_attend.attend_state == 1:
+                    row.append('지각')
+                
+                elif class_attend.attend_state == 2:
+                    row.append('출석')
+            
+            # 입실/퇴실 기록이 없는 경우
+            else:
+                row.append('입실시간 없음')
+                row.append('퇴실시간 없음')
+                row.append('결석')
+            
+
+        
+        
+        # 나머지 데이터 추가 ( 분반이름, 강의 이름 )
+        row.append(division.name)
+        row.append(course.course_name)
+        
+        # excel 데이터 한 행 추가
+        data.append(row)
+
+    ## 엑셀 파일 생성
+    # 파일 이름
+    excel_file = f'attendance_excel/출석부_강의_{course.course_name}_분반_{division.name}.xlsx'
+    
+    # 최종 경로
+    excel_path = os.path.join(settings.MEDIA_ROOT, excel_file)
+    
+    # 만약 경로에 파일이 있으면 지우기, 이 부분은 없애도됨.
+    # 혹시 모를 WINERROR 방지
+    if os.path.exists(excel_path):
+        os.remove(excel_path)
+    
+    
+    # 엑셀 파일 열기
+    wb = openpyxl.Workbook()
+    sheet = wb.active
+
+    for row_num, row_data in enumerate(data, start=1):
+        for col_num, value in enumerate(row_data, start=1):
+            col_letter = get_column_letter(col_num)
+            sheet[f"{col_letter}{row_num}"] = value
+    
+    
+    with open(excel_path, 'wb') as f:
+        wb.save(f)
+
+    print(os.path.basename(excel_file))
+    if os.path.exists(excel_path):
+        with open(excel_path, 'rb') as f:
+            response = HttpResponse(f.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = f'attachment; filename="{excel_file}"'
+            return response
+
+        
+        

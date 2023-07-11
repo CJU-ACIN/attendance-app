@@ -8,11 +8,13 @@ app_name = 'course'
 urlpatterns = [
     path('<int:pk>', views.course_list, name='course_list'),
     path('detail/<int:pk>/', views.course_detail, name='course_detail'),
+    
 
     
     path('create/', views.create_course, name='create_course'),
     path('edit/<int:pk>/', views.edit_course, name='edit_course'),
     path('delete/<int:pk>/', views.delete_course, name='delete_course'),
+    path('download/<int:pk>', views.download_attendance, name='download_attendance' ),
 
 
     path('attendance_division_list/', views.attendance_divison_list, name='attendance_division_list'),

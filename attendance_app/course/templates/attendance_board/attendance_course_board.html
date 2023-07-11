@@ -19,11 +19,19 @@
 
         <br>
 
-        <i style="color: blue;">
-          * 비대면 출결은 출석 변경을 통해 직접 출석을 기입하셔야합니다.
-        </i>
+        <div class="row">
 
-        <br>
+          <div class="col-md-6">
+            <i style="color: blue;" >
+              * 비대면 출결은 출석 변경을 통해 직접 출석을 기입하셔야합니다.
+            </i>
+
+          </div>
+          <div class="col-md-6 d-flex justify-content-end">
+            <a class="btn btn-success" href="{% url 'course:download_attendance' course.pk %}">엑셀 다운로드</a>
+          </div>
+        </div>
+        
         <hr><br>
         
         <table class="table table-striped">
