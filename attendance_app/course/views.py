@@ -404,7 +404,7 @@ def attendance_course_board(request, pk):
 
     division = Division.objects.get(pk=course.division_name_id)
     
-    students = Student.objects.filter(division_id=division.pk)
+    students = Student.objects.filter(division_id=division.pk).order_by('name')
     class_attends = ClassAttend.objects.filter(Q(student_id__division_id=division.pk) & Q(course_id_id=course))
 
     print(f'{class_attends = }')
@@ -480,7 +480,7 @@ def download_attendance(request, pk):
     course = Course.objects.get(pk=pk)
     division = Division.objects.get(pk=course.division_name_id)
     
-    students = Student.objects.filter(division_id=division.pk)
+    students = Student.objects.filter(division_id=division.pk).order_by('name')
     class_attends = ClassAttend.objects.filter(Q(student_id__division_id=division.pk) & Q(course_id_id=course))  
     
     
@@ -491,44 +491,60 @@ def download_attendance(request, pk):
     
     data = [['학생 이름', '입실시간', '퇴실시간', '출석 인정', '분반 이름', '강의 이름']]
     for student in students:
-        row = [student.name]  # 필요한 필드 값을 추출하여 리스트로 저장합니다.
+        row = []  # 필요한 필드 값을 추출하여 리스트로 저장합니다.
         
-        print(student.name)
+        # 값 초기화
+        student_name = student.name
+        my_start_at = '---'
+        my_end_at = '---'
+        my_attend_state = '결석'
+        division_name = division.name
+        course_name = course.course_name
+        
+    
         for class_attend in class_attends:
             print(f'{class_attend.attend_state = }')
             print(f'{class_attend.student_id_id = }')
             print(f'{student.id = }')
-            # 입실/퇴실 기록이 있는 경우
-            if class_attend.student_id_id == student.id and class_attend.start_at != '00:00:00' and class_attend.end_at != '00:00:00':
-                row.append(class_attend.start_at)
-                row.append(class_attend.end_at)
+            
+            
+            
+            # 대응하는 기록 확인
+            if class_attend.student_id_id == student.id:
+                # 입실 기록 확인
+                if class_attend.start_at != '00:00:00':
+                    my_start_at = class_attend.start_at
+                
+    
+                # 퇴실 기록 확인
+                if class_attend.end_at != '00:00:00':
+                    my_end_at = class_attend.end_at
+                
                 
                 
                 # 출석 인정 상태 표기
                 if class_attend.attend_state == 0:
-                    row.append('결석')
+                    my_attend_state = '결석'
                     
                 elif class_attend.attend_state == 1:
-                    row.append('지각')
+                    my_attend_state = '지각'
                 
                 elif class_attend.attend_state == 2:
-                    row.append('출석')
-            
-            # 입실/퇴실 기록이 없는 경우
-            else:
-                row.append('입실시간 없음')
-                row.append('퇴실시간 없음')
-                row.append('결석')
-            
+                    my_attend_state = '출석'
 
         
         
-        # 나머지 데이터 추가 ( 분반이름, 강의 이름 )
-        row.append(division.name)
-        row.append(course.course_name)
-        
+        # 한 행 데이터 설정
+        row.append(student_name)
+        row.append(my_start_at)
+        row.append(my_end_at)
+        row.append(my_attend_state)
+        row.append(division_name)
+        row.append(course_name)
+                
         # excel 데이터 한 행 추가
         data.append(row)
+        
 
     ## 엑셀 파일 생성
     # 파일 이름
