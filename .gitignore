@@ -1,6 +1,16 @@
 # venv
 /venv/
+
+# pycache
 __pycache__
 __pycache__/
 __pycache__/*
 *.pyc
+
+# database
+db.sqlite3
+
+# xlsx
+media/attendance_excel/**/*.xlsx
+
+
