@@ -471,13 +471,20 @@ def student_attendance_update(request):
             student_attend.end_at = formatted_time
             student_attend.save()
 
+        
+        # 첫 출석체크(객체생성) 일 경우에만 student.current_course_name 값 설정. 1개 일때만.
+        
         # student 수강중인 강의 상태 추가하기
-        student.current_course_name = f'{course.course_name}'
-        student.save()
+        student_survey_reply = SurveyReply.objects.filter(Q(survey_id_id__course_id_id=course.pk) & Q(student_id_id=student_id))
+
+        if len(student_survey_reply) < 1:
+            student.current_course_name = f'{course.course_name}'
+            student.save()
+        
         
         return redirect("course:attendance_course_board", pk=course.pk)
     
-    student_class_attend = ClassAttend.objects
+    
     #return redirect
     
     
