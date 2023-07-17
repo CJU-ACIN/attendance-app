@@ -11,6 +11,6 @@ __pycache__/*
 db.sqlite3
 
 # xlsx
-media/attendance_excel/**/*.xlsx
-media/qr_codes/**/*.png
+attendance_app/media/attendance_excel/**/*.xlsx
+attendance_app/media/qr_codes/**/*.png
 
