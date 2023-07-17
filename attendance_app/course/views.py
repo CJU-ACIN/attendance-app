@@ -178,7 +178,8 @@ def attendance_check_in_success(request, pk):
     }
     return render(request, 'attendance/attendance_check_in_success.html', context)
 
-# 퇴실용
+################################
+# (미사용)퇴실용
 def attendance_check_out(request):
     if request.method == 'POST':
         course_id = request.POST.get('course_id')
@@ -287,6 +288,8 @@ def attendance_check_out(request):
         return render(request,'attendance/attendance_check_out.html', context)
     else:
        return render(request, 'attendance/attendance_error.html')
+##############################################################
+
 
 
 # 강좌 리스트
@@ -464,6 +467,10 @@ def student_attendance_update(request):
             student_attend.end_at = formatted_time
             student_attend.save()
 
+        # student 수강중인 강의 상태 추가하기
+        student.current_course_name = f'{course.course_name}'
+        student.save()
+        
         return redirect("course:attendance_course_board", pk=course.pk)
     
     student_class_attend = ClassAttend.objects
@@ -579,5 +586,3 @@ def download_attendance(request, pk):
             response['Content-Disposition'] = f'attachment; filename="{excel_file}"'
             return response
 
-        
-        

@@ -19,6 +19,7 @@ class Course(models.Model):
         return f'[{self.division_name}] {self.course_name} (강사: {self.teacher_name}) - 수업시간: {self.hours}'
 
 
+
 # 강의에 대한 학생 출석
 class ClassAttend(models.Model):
     course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
