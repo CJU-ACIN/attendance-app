@@ -13,4 +13,6 @@ db.sqlite3
 # xlsx
 attendance_app/media/attendance_excel/**/*.xlsx
 attendance_app/media/qr_codes/**/*.png
-
+# save parent folder
+!attendance_app/media/attendance_excel/**/
+!attendance_app/media/qr_codes/**/
