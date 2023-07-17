@@ -399,6 +399,7 @@ def attendance_course_list(request, pk):
     return render(request, 'attendance_board/attendance_course_list.html', context)
 
 
+
 # 강의별 출석 명단
 @user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
 def attendance_course_board(request, pk):
@@ -409,6 +410,7 @@ def attendance_course_board(request, pk):
     
     students = Student.objects.filter(division_id=division.pk).order_by('name')
     class_attends = ClassAttend.objects.filter(Q(student_id__division_id=division.pk) & Q(course_id_id=course))
+    
 
     print(f'{class_attends = }')
 
@@ -421,6 +423,8 @@ def attendance_course_board(request, pk):
     }
 
     return render(request, 'attendance_board/attendance_course_board.html', context)
+
+
 
 # 출석부에서 출결 변경시 처리
 @user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
@@ -496,7 +500,7 @@ def download_attendance(request, pk):
     
     print(f'{students = }')
     
-    data = [['학생 이름', '입실시간', '퇴실시간', '출석 인정', '분반 이름', '강의 이름']]
+    data = [['학생 이름', '입실시간', '설문조사 제출 시간 (퇴실)', '출석 인정', '분반 이름', '강의 이름']]
     for student in students:
         row = []  # 필요한 필드 값을 추출하여 리스트로 저장합니다.
         

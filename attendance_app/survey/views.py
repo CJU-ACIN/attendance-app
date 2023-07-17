@@ -8,7 +8,7 @@ from course.models import Course, ClassAttend
 from survey.models import Survey, SurveyReply
 from user.models import Division, Student
 from survey.forms import SurveyReplyForm
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Q
 
 # Create your views here.
@@ -216,6 +216,12 @@ def survey_student_submit(request):
                 '''객체를 못가져올 시 생기는 예외 처리'''
                 pass
             
+            
+            except MultipleObjectsReturned:
+                '''이미 설문제출을 했는데 또 제출하려는 경우'''
+                pass
+
+
 
             # 제출 완료시 메인페이지로
             return redirect('home:home')
