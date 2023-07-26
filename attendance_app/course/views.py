@@ -368,7 +368,7 @@ def delete_course(request, pk):
     course = get_object_or_404(Course, pk=pk)
     if request.method == 'POST':
         course.delete()
-        return redirect('course:course_list', pk=course.pk)  # Replace 'home' with the appropriate URL name
+        return redirect('user:division_list')  # Replace 'home' with the appropriate URL name
     
     context = {'course': course}
     return render(request, 'course/delete_course.html', context)

@@ -21,7 +21,7 @@ class Student(models.Model):
     name = models.CharField(max_length=10)
     birth_date = models.DateField()
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    division = models.ForeignKey(Division, on_delete=models.CASCADE)
+    division = models.ForeignKey(Division, on_delete=models.PROTECT)
     qr_code = models.ImageField(upload_to='qr_codes/')
 
     # 현재 수강중인 강의 추가

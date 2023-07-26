@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from user.models import Student, Division
 from course.models import ClassAttend, Course
+from django.db.models import Q
 
 from django.contrib.auth import login, authenticate
 
@@ -10,6 +11,7 @@ from django.contrib import messages
 
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.db.models import ProtectedError
 from django.contrib.auth.hashers import make_password
 
 from django.contrib.auth.hashers import make_password
@@ -228,8 +230,22 @@ def delete_division(request, division_id):
     division = get_object_or_404(Division, pk=division_id)
     
     if request.method == 'POST':
-        division.delete()
-        return redirect('user:division_list')  # 적절한 URL로 리다이렉트
+        try:
+            division.delete()
+            return redirect('user:division_list')  # 적절한 URL로 리다이렉트
+        
+        except ProtectedError:
+            '''학생이 존재하는 분반을 지울시 생기는 오류'''
+            
+            # 해당 분반에 가입되어있는 학생 정보 전달
+            users = User.objects.filter(student__division_id=division_id)
+            
+            context = {
+                'users': users,
+                
+            }
+            
+            return render(request, 'user/error_page/division_protected_error.html', context)
     
     return render(request, 'user/admin/admin_delete_division.html', {'division': division})
 
