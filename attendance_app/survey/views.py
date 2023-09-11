@@ -245,7 +245,7 @@ def download_surveyreply(request, pk):
     """강의 평가 xlsx 다운로드"""
     # pk -> 강의(course) pk 값
     course_name = Course.objects.get(pk=pk).course_name
-    print(course_name)
+    # print(course_name)
     survey = Survey.objects.get(pk=pk)  # survey 질문 pk값
     surveyreplies = SurveyReply.objects.filter(survey_id_id=survey.pk).order_by('pk')  #  survey 답변 객체 모음
     
@@ -254,7 +254,7 @@ def download_surveyreply(request, pk):
     # print(list(surveyreplies.values_list('reply1', flat=True)))
     
     # 질문 10개 순회
-    print(list(surveyreplies.values_list('reply10', flat=True)))
+    # print(list(surveyreplies.values_list('reply10', flat=True)))
         
     data = {
         f'[질문1] {survey.question1}': list(surveyreplies.values_list('reply1', flat=True)),  # 질문1에 대한 답변
@@ -279,12 +279,6 @@ def download_surveyreply(request, pk):
         
     }
     
-    
-    
-    
-    
-    
-    
     # pandas로 CSV 데이터 생성 (예시)
     # data = {'이름': ['Alice', 'Bob', 'Charlie'],
     #         '나이': [25, 30, 35]}
@@ -292,7 +286,7 @@ def download_surveyreply(request, pk):
     df = pd.DataFrame(data)
 
     # CSV 파일로 데이터를 저장
-    response = HttpResponse(content_type='text/csv', charset='euc-kr')
+    response = HttpResponse(content_type='text/csv', charset='utf-8-sig')
     response['Content-Disposition'] = f'attachment; filename="{urllib.parse.quote(course_name)}.csv"'
     df.to_csv(path_or_buf=response, index=False, encoding='utf-8-sig')
 
