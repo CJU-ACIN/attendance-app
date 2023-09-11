@@ -10,6 +10,13 @@ from user.models import Division, Student
 from survey.forms import SurveyReplyForm
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Q
+from django.http import HttpResponse
+
+# 엑셀 다운로드
+import openpyxl
+from openpyxl.utils import get_column_letter
+import pandas as pd
+import urllib.parse
 
 # Create your views here.
 # 설분 문반 선택 리스트
@@ -230,4 +237,63 @@ def survey_student_submit(request):
             # 폼이 유효하지 않은 경우, 오류 처리
     else:
         form = SurveyReplyForm()
+
+
+# 강의 출석현황 xlsx 다운로드
+@user_passes_test(lambda u: u.is_staff, login_url='/') # 권한 없으면 홈으로
+def download_surveyreply(request, pk):
+    """강의 평가 xlsx 다운로드"""
+    # pk -> 강의(course) pk 값
+    course_name = Course.objects.get(pk=pk).course_name
+    print(course_name)
+    survey = Survey.objects.get(pk=pk)  # survey 질문 pk값
+    surveyreplies = SurveyReply.objects.filter(survey_id_id=survey.pk).order_by('pk')  #  survey 답변 객체 모음
+    
+    # 특정 강의에 대한 질문 객체들 모음
+    # print(len(surveyreplies))
+    # print(list(surveyreplies.values_list('reply1', flat=True)))
+    
+    # 질문 10개 순회
+    print(list(surveyreplies.values_list('reply10', flat=True)))
         
+    data = {
+        f'[질문1] {survey.question1}': list(surveyreplies.values_list('reply1', flat=True)),  # 질문1에 대한 답변
+        
+        f'[질문2] {survey.question2}': list(surveyreplies.values_list('reply2', flat=True)),  # 질문1에 대한 답변
+        
+        f'[질문3] {survey.question3}': list(surveyreplies.values_list('reply3', flat=True)),  # 질문1에 대한 답변
+        
+        f'[질문4] {survey.question4}': list(surveyreplies.values_list('reply4', flat=True)),  # 질문1에 대한 답변
+        
+        f'[질문5] {survey.question5}': list(surveyreplies.values_list('reply5', flat=True)),  # 질문1에 대한 답변
+        
+        f'[질문6] {survey.question6}': list(surveyreplies.values_list('reply6', flat=True)),  # 질문1에 대한 답변
+        
+        f'[질문7] {survey.question7}': list(surveyreplies.values_list('reply7', flat=True)),  # 질문1에 대한 답변
+        
+        f'[질문8] {survey.question8}': list(surveyreplies.values_list('reply8', flat=True)),  # 질문1에 대한 답변
+        
+        f'[질문9] {survey.question9}': list(surveyreplies.values_list('reply9', flat=True)),  # 질문1에 대한 답변
+        
+        f'[질문10] {survey.question10}': list(surveyreplies.values_list('reply10', flat=True)),  # 질문1에 대한 답변
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    # pandas로 CSV 데이터 생성 (예시)
+    # data = {'이름': ['Alice', 'Bob', 'Charlie'],
+    #         '나이': [25, 30, 35]}
+    
+    df = pd.DataFrame(data)
+
+    # CSV 파일로 데이터를 저장
+    response = HttpResponse(content_type='text/csv', charset='euc-kr')
+    response['Content-Disposition'] = f'attachment; filename="{urllib.parse.quote(course_name)}.csv"'
+    df.to_csv(path_or_buf=response, index=False, encoding='utf-8-sig')
+
+    return response

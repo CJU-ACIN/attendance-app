@@ -13,7 +13,13 @@
   <br><br><br>
     <div class="container">
 
-      <a class="btn btn-warning" href="{% url 'survey:survey_list' division.pk %}" role="button"> {{division.name}} 분반 강의 목록으로 </a>
+      <div class="container d-flex justify-content-between">
+        <a class="btn btn-warning btn-lg" href="{% url 'survey:survey_list' division.pk %}" role="button"> {{division.name}} 분반 강의 목록으로 </a>
+
+        <a class="btn btn-success btn-lg" href="{% url 'survey:download_surveyreply' course.pk %}" role="button">xlsx 다운</a>
+
+      </div>
+
 
       <br><br><br>
       상세 페이지

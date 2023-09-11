@@ -10,6 +10,10 @@ urlpatterns = [
     path('detail/<int:pk>/', views.survey_detail, name='survey_detail'),
     path('reply_detail/<int:pk>/', views.survey_reply_detail, name='survey_reply_detail'),
     
+    # 설문 목록 다운로드
+    path('download/<int:pk>/', views.download_surveyreply, name='download_surveyreply'),
+    
+    
     # 학생 설문 페이지 
     path('survey_student_reply/<int:pk>/', views.survey_student_reply, name='survey_student_reply'),
     path('survey_student_submit/', views.survey_student_submit, name='survey_student_submit'),

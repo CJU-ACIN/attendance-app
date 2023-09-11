@@ -16,7 +16,6 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 # 엑셀 다운로드
 import openpyxl
 from openpyxl.utils import get_column_letter
-from django.http import FileResponse
 from django.conf import settings
 
 from datetime import datetime, timedelta
