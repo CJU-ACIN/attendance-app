@@ -140,6 +140,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/home/'
 LOGOUT_REDIRECT_URL = '/home/'
-
-# 문자 인코딩 설정
-DEFAULT_CHARSET = 'utf-8'
