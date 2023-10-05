@@ -259,23 +259,33 @@ def download_surveyreply(request, pk):
     data = {
         f'[질문1] {survey.question1}': list(surveyreplies.values_list('reply1', flat=True)),  # 질문1에 대한 답변
         
-        f'[질문2] {survey.question2}': list(surveyreplies.values_list('reply2', flat=True)),  # 질문1에 대한 답변
+        f'[질문2] {survey.question2}': list(surveyreplies.values_list('reply2', flat=True)),  # 질문2에 대한 답변
         
-        f'[질문3] {survey.question3}': list(surveyreplies.values_list('reply3', flat=True)),  # 질문1에 대한 답변
+        f'[질문3] {survey.question3}': list(surveyreplies.values_list('reply3', flat=True)),  # 질문3에 대한 답변
         
-        f'[질문4] {survey.question4}': list(surveyreplies.values_list('reply4', flat=True)),  # 질문1에 대한 답변
+        f'[질문4] {survey.question4}': list(surveyreplies.values_list('reply4', flat=True)),  # 질문4에 대한 답변
         
-        f'[질문5] {survey.question5}': list(surveyreplies.values_list('reply5', flat=True)),  # 질문1에 대한 답변
+        f'[질문5] {survey.question5}': list(surveyreplies.values_list('reply5', flat=True)),  # 질문5에 대한 답변
         
-        f'[질문6] {survey.question6}': list(surveyreplies.values_list('reply6', flat=True)),  # 질문1에 대한 답변
+        f'[질문6] {survey.question6}': list(surveyreplies.values_list('reply6', flat=True)),  # 질문6에 대한 답변
         
-        f'[질문7] {survey.question7}': list(surveyreplies.values_list('reply7', flat=True)),  # 질문1에 대한 답변
+        f'[질문7] {survey.question7}': list(surveyreplies.values_list('reply7', flat=True)),  # 질문7에 대한 답변
         
-        f'[질문8] {survey.question8}': list(surveyreplies.values_list('reply8', flat=True)),  # 질문1에 대한 답변
+        f'[질문8] {survey.question8}': list(surveyreplies.values_list('reply8', flat=True)),  # 질문8에 대한 답변
         
-        f'[질문9] {survey.question9}': list(surveyreplies.values_list('reply9', flat=True)),  # 질문1에 대한 답변
+        f'[질문9] {survey.question9}': list(surveyreplies.values_list('reply9', flat=True)),  # 질문9에 대한 답변
         
-        f'[질문10] {survey.question10}': list(surveyreplies.values_list('reply10', flat=True)),  # 질문1에 대한 답변
+        f'[질문10] {survey.question10}': list(surveyreplies.values_list('reply10', flat=True)),  # 질문10에 대한 답변
+
+        f'[질문11] {survey.question11}': list(surveyreplies.values_list('reply11', flat=True)),  # 질문11에 대한 답변
+
+        f'[질문12] {survey.question12}': list(surveyreplies.values_list('reply12', flat=True)),  # 질문12에 대한 답변
+
+        f'[질문13] {survey.question13}': list(surveyreplies.values_list('reply13', flat=True)),  # 질문13에 대한 답변
+
+        f'[질문14] {survey.question14}': list(surveyreplies.values_list('reply14', flat=True)),  # 질문14에 대한 답변
+
+        f'[질문15] {survey.question15}': list(surveyreplies.values_list('reply15', flat=True)),  # 질문15에 대한 답변
         
     }
     
