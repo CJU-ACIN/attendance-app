@@ -17,6 +17,11 @@ class Survey(models.Model):
     question8 = models.CharField(max_length=200, blank=True)
     question9 = models.CharField(max_length=200, blank=True)
     question10 = models.CharField(max_length=200, blank=True)
+    question11 = models.CharField(max_length=200, blank=True)
+    question12 = models.CharField(max_length=200, blank=True)
+    question13 = models.CharField(max_length=200, blank=True)
+    question14 = models.CharField(max_length=200, blank=True)
+    question15 = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
         course = get_object_or_404(Course, pk=self.course_id.pk)
@@ -37,7 +42,14 @@ class SurveyReply(models.Model):
     reply8 = models.TextField(blank=True)
     reply9 = models.TextField(blank=True)
     reply10 = models.TextField(blank=True)
+    reply11 = models.TextField(blank=True)
+    reply12 = models.TextField(blank=True)
+    reply13 = models.TextField(blank=True)
+    reply14 = models.TextField(blank=True)
+    reply15 = models.TextField(blank=True)
+
     submit_survey = models.BooleanField(default=False)
+
     def __str__(self):
         survey = get_object_or_404(Survey, pk=self.survey_id.pk)
         course = get_object_or_404(Course, pk=survey.course_id.pk)

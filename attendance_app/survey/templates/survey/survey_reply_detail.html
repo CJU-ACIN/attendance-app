@@ -330,8 +330,8 @@
     <!-- 8번 질문 end -->
 
 
-    <!-- 질문 9번 start -->
-    {% if survey.question9 %}
+  <!-- 질문 9번 start -->
+  {% if survey.question9 %}
     <h3><b>[9번 문항] {{ survey.question9 }}</b></h3>
     <br>
 
@@ -371,17 +371,17 @@
 
 <!-- 질문 10번 start -->
 {% if survey.question10 %}
-<h3><b>[10번 문항] {{ survey.question10 }}</b></h3>
-<br>
+  <h3><b>[10번 문항] {{ survey.question10 }}</b></h3>
+  <br>
 
-<!-- 질문 8번 답변 -->
-{% if survey_reply.reply10 %}
-  답변: {{ survey_reply.reply10 }}
+  <!-- 질문 8번 답변 -->
+  {% if survey_reply.reply10 %}
+    답변: {{ survey_reply.reply10 }}
 
-{% else %}
-  답변: 없음
+  {% else %}
+    답변: 없음
 
-{% endif %}
+  {% endif %}
 
 
 {% else %}
@@ -389,13 +389,13 @@
 <br>
 
 <!-- 질문 10번 답변 -->
-{% if survey_reply.reply10 %}
-  답변: {{ survey_reply.reply10 }}
+  {% if survey_reply.reply10 %}
+    답변: {{ survey_reply.reply10 }}
 
-{% else %}
-  답변: 없음
-  
-{% endif %}
+  {% else %}
+    답변: 없음
+    
+  {% endif %}
 
 {% endif %}
 
@@ -405,6 +405,213 @@
 <br><br>
 
 <!-- 10번 질문 end -->
+
+
+<!-- 질문 11번 start -->
+{% if survey.question11 %}
+  <h3><b>[10번 문항] {{ survey.question11 }}</b></h3>
+  <br>
+
+  <!-- 질문 11번 답변 -->
+  {% if survey_reply.reply11 %}
+    답변: {{ survey_reply.reply11 }}
+
+  {% else %}
+    답변: 없음
+
+  {% endif %}
+
+
+{% else %}
+<h3><b>[11번 문항] 없음 </b></h3>
+<br>
+
+<!-- 질문 11번 답변 -->
+  {% if survey_reply.reply11 %}
+    답변: {{ survey_reply.reply11 }}
+
+  {% else %}
+    답변: 없음
+    
+  {% endif %}
+
+{% endif %}
+
+
+<br><br>
+<hr>
+<br><br>
+
+<!-- 11번 질문 end -->
+
+
+<!-- 질문 12번 start -->
+{% if survey.question12 %}
+  <h3><b>[12번 문항] {{ survey.question12 }}</b></h3>
+  <br>
+
+  <!-- 질문 12번 답변 -->
+  {% if survey_reply.reply12 %}
+    답변: {{ survey_reply.reply12 }}
+
+  {% else %}
+    답변: 없음
+
+  {% endif %}
+
+
+{% else %}
+<h3><b>[12번 문항] 없음 </b></h3>
+<br>
+
+<!-- 질문 10번 답변 -->
+  {% if survey_reply.reply12 %}
+    답변: {{ survey_reply.reply12 }}
+
+  {% else %}
+    답변: 없음
+    
+  {% endif %}
+
+{% endif %}
+
+
+<br><br>
+<hr>
+<br><br>
+
+<!-- 12번 질문 end -->
+
+
+<!-- 질문 13번 start -->
+{% if survey.question13 %}
+  <h3><b>[13번 문항] {{ survey.question13 }}</b></h3>
+  <br>
+
+  <!-- 질문 13번 답변 -->
+  {% if survey_reply.reply13 %}
+    답변: {{ survey_reply.reply13 }}
+
+  {% else %}
+    답변: 없음
+
+  {% endif %}
+
+
+{% else %}
+<h3><b>[13번 문항] 없음 </b></h3>
+<br>
+
+<!-- 질문 13번 답변 -->
+  {% if survey_reply.reply13 %}
+    답변: {{ survey_reply.reply13 }}
+
+  {% else %}
+    답변: 없음
+    
+  {% endif %}
+
+{% endif %}
+
+
+<br><br>
+<hr>
+<br><br>
+
+<!-- 13번 질문 end -->
+
+
+<!-- 질문 14번 start -->
+{% if survey.question14 %}
+  <h3><b>[14번 문항] {{ survey.question14 }}</b></h3>
+  <br>
+
+  <!-- 질문 14번 답변 -->
+  {% if survey_reply.reply14 %}
+    답변: {{ survey_reply.reply14 }}
+
+  {% else %}
+    답변: 없음
+
+  {% endif %}
+
+
+{% else %}
+<h3><b>[14번 문항] 없음 </b></h3>
+<br>
+
+<!-- 질문 14번 답변 -->
+{% if survey_reply.reply14 %}
+    답변: {{ survey_reply.reply14 }}
+
+  {% else %}
+    답변: 없음
+    
+  {% endif %}
+
+{% endif %}
+
+
+<br><br>
+<hr>
+<br><br>
+
+<!-- 14번 질문 end -->
+
+
+<!-- 질문 15번 start -->
+{% if survey.question15 %}
+  <h3><b>[15번 문항] {{ survey.question15 }}</b></h3>
+  <br>
+
+  <!-- 질문 15번 답변 -->
+  {% if survey_reply.reply15 %}
+    답변: {{ survey_reply.reply15 }}
+
+  {% else %}
+    답변: 없음
+
+  {% endif %}
+
+
+{% else %}
+<h3><b>[15번 문항] 없음 </b></h3>
+<br>
+
+<!-- 질문 15번 답변 -->
+  {% if survey_reply.reply15 %}
+    답변: {{ survey_reply.reply15 }}
+
+  {% else %}
+    답변: 없음
+    
+  {% endif %}
+
+{% endif %}
+
+
+<br><br>
+<hr>
+<br><br>
+
+<!-- 15번 질문 end -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

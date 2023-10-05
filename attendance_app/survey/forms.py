@@ -15,6 +15,11 @@ class SurveyForm(forms.ModelForm):
             'question8',
             'question9',
             'question10',
+            'question11',
+            'question12',
+            'question13',
+            'question14',
+            'question15',
             
             )
         
@@ -31,6 +36,11 @@ class SurveyForm(forms.ModelForm):
             'question8': forms.TextInput(attrs={'class': 'form-control'}),
             'question9': forms.TextInput(attrs={'class': 'form-control'}),
             'question10': forms.TextInput(attrs={'class': 'form-control'}),
+            'question11': forms.TextInput(attrs={'class': 'form-control'}),
+            'question12': forms.TextInput(attrs={'class': 'form-control'}),
+            'question13': forms.TextInput(attrs={'class': 'form-control'}),
+            'question14': forms.TextInput(attrs={'class': 'form-control'}),
+            'question15': forms.TextInput(attrs={'class': 'form-control'}),
 
         }
         
@@ -46,6 +56,11 @@ class SurveyForm(forms.ModelForm):
             'question8': '질문 8',
             'question9': '질문 9',
             'question10': '질문 10',
+            'question11': '질문 11',
+            'question12': '질문 12',
+            'question13': '질문 13',
+            'question14': '질문 14',
+            'question15': '질문 15',
         }
         
         
@@ -64,6 +79,11 @@ class SurveyReplyForm(forms.ModelForm):
             'reply8',
             'reply9',
             'reply10',
+            'reply11',
+            'reply12',
+            'reply13',
+            'reply14',
+            'reply15',
                   
             )
 

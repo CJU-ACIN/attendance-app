@@ -9,6 +9,7 @@ __pycache__/*
 
 # database
 db.sqlite3
+migrations/
 
 # xlsx
 attendance_app/media/attendance_excel/**/*.xlsx
@@ -18,4 +19,3 @@ attendance_app/media/qr_codes/**/*.png
 !attendance_app/media/qr_codes/
 !attendance_app/media/attendance_excel/**/example.xlsx
 !attendance_app/media/qr_codes/**/example.png
-
